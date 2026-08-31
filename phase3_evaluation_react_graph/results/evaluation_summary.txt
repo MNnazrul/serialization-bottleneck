@@ -1,0 +1,115 @@
+EXPERIMENT 2 (ReAct) - GRAPH DOMAIN - EVALUATION SUMMARY
+============================================================
+Task: recover 8 properties from text-serialized (edge-list) graphs with a
+      ReAct Thought/Action/Observation loop over structural tools
+      (Neighbors / Degree / HasEdge / Nodes / EdgeCount / Finish),
+      vs a matched single-call zero-shot baseline (Experiment 1's method).
+Grading: identical to Experiment 1 (exact match for int/bool; avg_clustering
+         at 1% relative error). ReAct episodes that never reach Finish are
+         scored incorrect (no CoT-SC back-off).
+
+  V4-Flash      2399/2399 episodes             zero-shot baseline: matched (same session)
+  Qwen3-32B     532/2399 episodes  [PARTIAL - credits] zero-shot baseline: Experiment 1 committed
+  Llama4-Scout  1995/2399 episodes  [PARTIAL - credits] zero-shot baseline: Experiment 1 committed
+  Gemini2.5-FL  2399/2399 episodes             zero-shot baseline: matched (same session)
+  GPT-4.1-mini  1827/2399 episodes  [PARTIAL - credits] zero-shot baseline: Experiment 1 committed
+  V4-Pro*       480/480 episodes               zero-shot baseline: matched (same session)
+
+HEADLINE: ReAct helps LOCAL properties, hurts GLOBAL ones.
+  V4-Flash      local   +5.7pp [+3.8,+7.5]    global -13.3pp [-16.2,-10.3]
+  Qwen3-32B     local   +2.9pp [+0.8,+4.9]    global -14.3pp [-18.9,-9.7]
+  Llama4-Scout  local   +8.8pp [+6.5,+11.2]    global  -4.3pp [-7.5,-1.1]
+  Gemini2.5-FL  local  -14.3pp [-18.2,-10.7]    global -12.7pp [-15.5,-9.9]
+  GPT-4.1-mini  local   +3.3pp [+2.0,+4.8]    global -15.4pp [-18.5,-12.3]
+  V4-Pro*       local   +1.7pp [+0.0,+4.2]    global -19.4pp [-25.8,-12.8]
+
+PER-PROPERTY (ReAct acc  ->  zero-shot acc   [ReAct finish rate])
+  V4-Flash  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  88.7%   fin 100%   d +11.3pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        78.3% ->  65.0%   fin  81%   d +13.3pp
+    [G] is_planar           30.3% ->  33.7%   fin  31%   d  -3.3pp
+    [G] triangle_count       2.3% ->   8.7%   fin   2%   d  -6.3pp
+    [G] diameter            14.3% ->  41.7%   fin  18%   d -27.3pp
+    [G] chromatic_number     7.4% ->  51.8%   fin   8%   d -44.5pp
+    [G] avg_clustering       1.0% ->  12.7%   fin   1%   d -11.7pp
+
+  Qwen3-32B  (Experiment 1 committed)
+    [L] degree_of_node_0    98.6% ->  92.7%   fin 100%   d  +5.9pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        66.7% ->  76.3%   fin  82%   d  -9.7pp
+    [G] is_planar           31.8% ->  71.7%   fin  41%   d -39.8pp
+    [G] triangle_count       4.5% ->   3.0%   fin   5%   d  +1.5pp
+    [G] diameter             9.2% ->  15.0%   fin  11%   d  -5.8pp
+    [G] chromatic_number     9.2% ->  44.1%   fin  18%   d -34.9pp
+    [G] avg_clustering       3.1% ->   0.7%   fin   3%   d  +2.4pp
+
+  Llama4-Scout  (Experiment 1 committed)
+    [L] degree_of_node_0    99.2% ->  84.0%   fin  99%   d +15.2pp
+    [L] edge_count         100.0% ->  97.7%   fin 100%   d  +2.3pp
+    [G] is_bipartite        52.2% ->  75.7%   fin  75%   d -23.5pp
+    [G] is_planar           62.7% ->  71.7%   fin  82%   d  -9.0pp
+    [G] triangle_count       2.4% ->   0.3%   fin   8%   d  +2.1pp
+    [G] diameter            13.7% ->  10.7%   fin  53%   d  +3.0pp
+    [G] chromatic_number    36.3% ->  37.1%   fin  88%   d  -0.8pp
+    [G] avg_clustering       2.8% ->   0.3%   fin  43%   d  +2.5pp
+
+  Gemini2.5-FL  (matched (same session))
+    [L] degree_of_node_0    98.7% ->  89.0%   fin  99%   d  +9.7pp
+    [L] edge_count          61.7% -> 100.0%   fin  62%   d -38.3pp
+    [G] is_bipartite        78.7% ->  79.0%   fin  83%   d  -0.3pp
+    [G] is_planar           27.7% ->  41.7%   fin  29%   d -14.0pp
+    [G] triangle_count       1.3% ->   5.0%   fin   1%   d  -3.7pp
+    [G] diameter             0.7% ->  20.0%   fin   1%   d -19.3pp
+    [G] chromatic_number     2.7% ->  41.5%   fin   4%   d -38.8pp
+    [G] avg_clustering       0.3% ->   0.7%   fin   0%   d  -0.3pp
+
+  GPT-4.1-mini  (Experiment 1 committed)
+    [L] degree_of_node_0   100.0% ->  93.3%   fin 100%   d  +6.7pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        78.9% ->  79.0%   fin  80%   d  -0.1pp
+    [G] is_planar           36.8% ->  78.7%   fin  55%   d -41.8pp
+    [G] triangle_count       1.3% ->   0.0%   fin   1%   d  +1.3pp
+    [G] diameter             2.2% ->  40.0%   fin   4%   d -37.8pp
+    [G] chromatic_number     4.4% ->  19.1%   fin  10%   d -14.7pp
+    [G] avg_clustering       1.3% ->   0.7%   fin   1%   d  +0.6pp
+
+  V4-Pro*  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  98.3%   fin 100%   d  +1.7pp
+    [L] edge_count         100.0% ->  98.3%   fin 100%   d  +1.7pp
+    [G] is_bipartite        70.0% ->  73.3%   fin  72%   d  -3.3pp
+    [G] is_planar           31.7% ->  86.7%   fin  32%   d -55.0pp
+    [G] triangle_count       1.7% ->   8.3%   fin   2%   d  -6.7pp
+    [G] diameter             6.7% ->  30.0%   fin   7%   d -23.3pp
+    [G] chromatic_number     6.7% ->  33.3%   fin   8%   d -26.7pp
+    [G] avg_clustering       0.0% ->   1.7%   fin   0%   d  -1.7pp
+
+MECHANISM
+  - Local properties (degree_of_node_0, edge_count) are one tool call away:
+    ReAct issues Degree[0] / EdgeCount[] and finishes in ~2 steps, removing
+    the zero-shot miscount.
+  - Global properties need an aggregate over the whole structure. The model
+    spends its step budget on one-at-a-time HasEdge / Neighbors probes and
+    often never reaches Finish (see finish rates above); zero-shot at least
+    guesses from the full edge list in context. This is the paper's own
+    trade-off (Table 2: the structural constraint raises reasoning-error rate).
+  - Loop overhead can also hurt a format-fragile model on an otherwise
+    trivial local property (watch Gemini edge_count).
+
+REACT LOOP BEHAVIOUR (per model)
+  V4-Flash      finish   43%   mean steps 10.2   mean steps|correct  3.6   no_finish   57%
+  Qwen3-32B     finish   46%   mean steps 10.3   mean steps|correct  4.1   no_finish   54%
+  Llama4-Scout  finish   69%   mean steps 10.0   mean steps|correct  5.9   no_finish   31%
+  Gemini2.5-FL  finish   35%   mean steps 11.0   mean steps|correct  3.5   no_finish   65%
+  GPT-4.1-mini  finish   44%   mean steps 10.4   mean steps|correct  3.9   no_finish   56%
+  V4-Pro*       finish   40%   mean steps 10.5   mean steps|correct  3.8   no_finish   60%
+
+V4-Flash REACT FAILURE MODES (heuristic, n=1398, manual review pending)
+  no_finish_global     1377  (98%)
+  wrong_finish           21  (2%)
+
+NOTE
+  Qwen3-32B / Llama4-Scout / GPT-4.1-mini ReAct runs stopped mid-batch on
+  API credit exhaustion (OpenRouter 402 / OpenAI 429). Their rows above are
+  partial and their zero-shot column falls back to Experiment 1's committed
+  results; re-run the runners once credits are topped up for a clean pair.

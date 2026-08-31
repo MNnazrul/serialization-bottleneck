@@ -6,3 +6,9 @@ __pycache__/
 .impeccable/
 logs/
 phase2_model_results_graph/phase2_commands.txt
+
+# Experiment 2 (ReAct) raw Phase-2 result payloads — large (each record stores the
+# full Thought/Action/Observation transcript). Regenerate by re-running
+# phase2_react_graph/<NN_model>/run_*_react.py and run_*_zeroshot.py (resume-safe).
+phase2_react_graph/*/*_results.json
+phase2_react_graph/*/*_results.jsonl
