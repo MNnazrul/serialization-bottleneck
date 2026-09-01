@@ -271,11 +271,20 @@ if FAIL:
         out(f"  {k:20s} {v:4d}  ({100*v/tot:.0f}%)")
     out("")
 
-out("NOTE")
-out("  Qwen3-32B / Llama4-Scout / GPT-4.1-mini ReAct runs stopped mid-batch on")
-out("  API credit exhaustion (OpenRouter 402 / OpenAI 429). Their rows above are")
-out("  partial and their zero-shot column falls back to Experiment 1's committed")
-out("  results; re-run the runners once credits are topped up for a clean pair.")
+_partial = [r["label"] for r in rows_present if r["partial"]]
+_fallback = [r["label"] for r in rows_present if r["src"] != "matched (same session)"]
+if _partial or _fallback:
+    out("NOTE")
+    if _partial:
+        out(f"  Partial ReAct coverage (stopped on API credit exhaustion): {', '.join(_partial)}.")
+        out("  Re-run the runners to complete; treat those rows' CIs as wider than printed.")
+    if _fallback:
+        out(f"  Zero-shot column is Experiment 1's committed run (not a same-session")
+        out(f"  matched control) for: {', '.join(_fallback)}.")
+else:
+    out("NOTE")
+    out("  All six models have full ReAct coverage and a matched, same-session")
+    out("  zero-shot control. V4-Pro* is the 60-graph 20% subsample, as in Experiment 1.")
 
 (RESULTS / "evaluation_summary.txt").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))

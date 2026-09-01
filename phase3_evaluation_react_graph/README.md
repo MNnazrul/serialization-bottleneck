@@ -18,9 +18,9 @@ Inputs, read in place (nothing copied):
 
 | Arm | Path | Notes |
 |---|---|---|
-| ReAct | `../phase2_react_graph/<NN>/<key>_results.json` | 3 complete (V4-Flash, Gemini, V4-Pro*), 3 partial (Qwen3, Llama4-Scout, GPT-4.1-mini — API credits ran out mid-run) |
-| Zero-shot (matched) | `../phase2_react_graph/<NN>/<key>_zeroshot_results.json` | Experiment 1's method exactly, re-run in the same session as the ReAct arm — V4-Flash, Gemini, V4-Pro* |
-| Zero-shot (fallback) | `../phase2_model_results_graph/<NN>/<key>_results.json` | Experiment 1's committed zero-shot, used only where the matched control was not run |
+| ReAct | `../phase2_react_graph/<NN>/<key>_results.json` | all six models, full coverage (300 graphs; V4-Pro* on the 60-graph subsample) |
+| Zero-shot (matched) | `../phase2_react_graph/<NN>/<key>_zeroshot_results.json` | Experiment 1's method exactly, re-run in the same session as the ReAct arm — all six models |
+| Zero-shot (fallback) | `../phase2_model_results_graph/<NN>/<key>_results.json` | Experiment 1's committed zero-shot; the script uses it only if a matched control file is missing |
 
 ## Run
 
@@ -74,12 +74,6 @@ a format-fragile model on an otherwise trivial local read. See
 
 ## Known limitations
 
-- **Partial ReAct coverage for 3 models.** Qwen3-32B, Llama4-Scout and
-  GPT-4.1-mini stopped mid-run on API credit exhaustion; their rows are partial
-  and their zero-shot column falls back to Experiment 1's committed results
-  (a different session, and JSON-mode-on for the models where Experiment 1 used
-  it). Re-run those Phase-2 runners once credits are topped up for a clean
-  matched pair, then re-run this script.
 - **Failure labels are heuristic**, same discipline as Experiment 1 —
   `manual_label` is left `null` for the review pass.
 - No cross-domain decision readout here; Experiment 2 has only been run on the

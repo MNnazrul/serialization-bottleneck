@@ -20,9 +20,11 @@ mechanism, logging, JSON export, the cost summary, and the CLI. Only the call
 changes: one API call per question becomes a capped ReAct loop. No file
 outside `phase2_react_graph/` is modified.
 
-**No API calls have been made yet.** The harness is validated offline
-(`_common/selftest_react.py`, all six `--dry-run`). Running the models needs
-your keys in `.env` (root README §"API keys") and is a paid operation.
+**Run 2026-08-30/09-01.** All six models have a full ReAct run and a matched
+same-session zero-shot control; results live beside each runner (gitignored —
+see §5). The harness is also validated offline (`_common/selftest_react.py`,
+all six `--dry-run`). Re-running needs your keys in `.env` (root README §"API
+keys") and is a paid operation; every runner resumes by `(object_id, property)`.
 
 ---
 
