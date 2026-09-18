@@ -139,7 +139,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -1423,7 +1423,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 2,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -1891,7 +1891,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -3823,7 +3823,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -5803,7 +5803,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -6439,7 +6439,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -7399,7 +7399,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -7735,7 +7735,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -7867,7 +7867,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -7963,7 +7963,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -8011,7 +8011,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -8023,7 +8023,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -10303,7 +10303,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -10315,7 +10315,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -10507,7 +10507,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11335,7 +11335,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11455,7 +11455,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11587,7 +11587,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11635,7 +11635,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11731,7 +11731,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11779,7 +11779,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 1,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -11947,7 +11947,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -13027,7 +13027,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -13039,7 +13039,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -13375,7 +13375,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -15931,7 +15931,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -15943,7 +15943,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -16231,7 +16231,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -16243,7 +16243,7 @@
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,
-    "invalid_actions": 15,
+    "invalid_actions": 0,
     "heuristic_label": "no_finish_global",
     "manual_label": null
   },
@@ -16576,6 +16576,18 @@
     "property": "avg_clustering",
     "locality": "global",
     "ground_truth": 0.4124,
+    "parsed_answer": null,
+    "react_steps": 15,
+    "react_finished": false,
+    "invalid_actions": 0,
+    "heuristic_label": "no_finish_global",
+    "manual_label": null
+  },
+  {
+    "object_id": "graph_simple_watts_strogatz_016",
+    "property": "chromatic_number",
+    "locality": "global",
+    "ground_truth": 4,
     "parsed_answer": null,
     "react_steps": 15,
     "react_finished": false,

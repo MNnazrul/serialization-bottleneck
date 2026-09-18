@@ -87,6 +87,14 @@ def main() -> int:
     check("parse_action last action wins",
           rh.parse_action("Thought 1: x\nAction 1: Neighbors[0]\nsomething\nAction 2: Finish[1]") == ("finish", "1"))
     check("parse_action unknown -> None", rh.parse_action("Action 1: Frobnicate[0]")[0] is None)
+    # Decorated-but-valid actions seen in the 2026-08-30 run (were wrongly "Invalid action").
+    check("parse_action outer bracket", rh.parse_action("Action 15: [Finish[117]]") == ("finish", "117"))
+    check("parse_action outer bracket, empty arg", rh.parse_action("Action 2: [EdgeCount[]]") == ("edgecount", ""))
+    check("parse_action markdown bold", rh.parse_action("**Action 3:** HasEdge[1, 2]") == ("hasedge", "1, 2"))
+    check("parse_action backticks", rh.parse_action("Action 11: `Neighbors[0]`") == ("neighbors", "0"))
+    check("parse_action backtick label only", rh.parse_action("Action: `Degree[4]`") == ("degree", "4"))
+    check("parse_action prose without action -> None",
+          rh.parse_action("Action 1: Check node 0 and its neighbors")[0] is None)
 
     # --- (a) full episode: every tool then a correct Finish ----------------
     ep, rec = episode(

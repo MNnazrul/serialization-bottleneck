@@ -99,7 +99,9 @@ The analog of the paper's `search` / `lookup` / `finish`. Every tool reads
 | `Finish[x]` | ends the episode; `x` goes through the Experiment-1 `normalize_answer` |
 
 Action-name matching is case-insensitive and tolerates a few aliases
-(`has_edge`, `edge_count`, ...). An unknown or malformed action is not fatal —
+(`has_edge`, `edge_count`, ...) and, since 2026-09-16, the usual decorations
+around a valid action: `**Action 3:** ...`, backticks, and an outer bracket
+(`Action 3: [Finish[4]]`). See §9. An unknown or malformed action is not fatal —
 the model gets an "invalid action" observation listing the valid set and may
 recover (matches the paper tolerating a bad step).
 
@@ -177,7 +179,8 @@ The full Experiment-1 CLI (`--dataset`, `--subset`, `--jsonl-output`,
 
 | Flag | Default | Purpose |
 |------|---------|---------|
-| `--max-steps` | `8` | Thought/Action/Observation steps before an episode gives up |
+| `--max-steps` | `15` | Thought/Action/Observation steps before an episode gives up |
+| `--only-pairs` | — | JSON list of `[object_id, property]`: re-run exactly those episodes (used by the §9 repair) |
 
 `--json-mode` is **not** present (no model uses it here).
 
@@ -234,7 +237,8 @@ adds four fields:
   "method": "react",
   "react_steps": 4,             // Thought/Action/Observation steps taken
   "react_finished": true,       // did the model call Finish[...] within --max-steps
-  "react_tool_calls": [ { "step": 1, "action": "neighbors", "arg": "0", "observation": "Node 0 has neighbors: [8, 9]." }, ... ]
+  "react_tool_calls": [ { "step": 1, "action": "neighbors", "arg": "0", "observation": "Node 0 has neighbors: [8, 9]." }, ... ],
+  "action_parser": 2            // absent = original strict parser (2026-08-30 run); 2 = fixed parser
 }
 ```
 
@@ -247,7 +251,7 @@ argument did not normalize to a valid answer for that property.
 ## 6. Verification (all offline, no API key)
 
 ```bash
-python phase2_react_graph/_common/selftest_react.py     # 32 checks: tools, loop, step cap, scoring
+python phase2_react_graph/_common/selftest_react.py     # 38 checks: tools, parser, loop, step cap, scoring
 cd phase2_react_graph/01_v4flash && python run_v4flash_react.py --dry-run
 cd phase2_react_graph/06_v4pro_nonthinking && python build_subsample.py --verify
 ```
@@ -286,3 +290,43 @@ scores ReAct against the zero-shot arm — per property, per locality, with
 bootstrap CIs and figures. The `method`, `react_steps`, `react_finished` and
 `react_tool_calls` fields feed that analysis (accuracy vs. step count, finish
 rate, failure taxonomy).
+
+---
+
+## 9. Action-parser repair (2026-09-16)
+
+**Bug.** The original action regex only accepted `Action N: Name[arg]`. Models
+often decorate valid actions, for example Gemini `Action 15: [Finish[117]]`,
+V4-Flash `**Action 3:** HasEdge[1, 2]`, Llama `Action 2: [Nodes[]]`, or
+backticks. The harness answered those with "Invalid action". A model that had
+already given the right answer kept retrying until the step cap, and the
+episode was scored `no_finish`. This caused Gemini's `edge_count` drop
+(62% instead of 100%) and put its tier accuracy out of order
+(simple < hard).
+
+**Fix.** `_ACTION_RE` now tolerates bold, backticks and an outer bracket
+(`ACTION_PARSER_VERSION = 2`, logged as `action_parser` on every new record).
+It still rejects prose "actions" (`Action 1: BFS from node 0`). On every step
+of the original run where the old parser already found an action, the new
+parser returns the same action, apart from 5 Gemini steps where the old parser
+had picked up an action quoted earlier in the model's reasoning.
+
+**Repair without a full re-run.** `_common/repair_action_parse.py` rebuilds each
+logged episode's per-step text and finds the first step where the fixed parser
+disagrees with the logged action:
+
+| Case | Count | Action |
+|---|---|---|
+| that step is a `Finish` | Gemini 104, Llama 2 | **replayed offline**: every earlier step is identical, so the corrected record is exact (`repair: "action_parse_replay"`) |
+| that step is a tool call | V4-Flash 30, Llama 44, Gemini 25 | **re-run** with `run_<key>_react.py --only-pairs <key>_repair_pairs.json` (real cost $0.27) |
+| no divergence | everything else; Qwen3, GPT-4.1-mini, V4-Pro* untouched | unchanged |
+
+Corrected records are **appended** to the JSONL (latest per pair wins), so the
+original records remain in the log. The script is idempotent: a second run
+reports nothing left to replay or re-run.
+
+```bash
+python phase2_react_graph/_common/repair_action_parse.py            # report
+python phase2_react_graph/_common/repair_action_parse.py --apply    # replay + write pairs files
+```
+

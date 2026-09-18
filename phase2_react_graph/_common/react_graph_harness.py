@@ -107,7 +107,15 @@ def parse_edge_list(edge_list: str) -> tuple[int, int, dict[int, set[int]]]:
 VALID_ACTIONS = "Neighbors[n], Degree[n], HasEdge[u, v], Nodes[], EdgeCount[], Finish[answer]"
 _INVALID_OBS = f"Invalid action. Valid actions: {VALID_ACTIONS}."
 
-_ACTION_RE = re.compile(r"Action\s*\d*\s*:\s*([A-Za-z_]+)\s*\[(.*?)\]", re.IGNORECASE | re.DOTALL)
+# Tolerates the common decorations models put around an otherwise valid action:
+# Markdown bold on the label (`**Action 3:** HasEdge[1, 2]`), backticks
+# (`Action 3: `Degree[0]``) and an extra outer bracket (`Action 3: [Finish[4]]`).
+# The strict form `Action\s*\d*\s*:\s*Name[...]` silently rejected these as
+# "Invalid action" -- a harness bug that turned correct Finish calls into
+# no_finish episodes (Gemini 2.5 Flash-Lite, Llama 4 Scout, V4-Flash).
+ACTION_PARSER_VERSION = 2  # 1 = strict regex (2026-08-30 run, no field logged); 2 = tolerant
+_ACTION_RE = re.compile(r"Action\s*\d*\s*\**\s*:\s*[*`\[\s]*([A-Za-z_]+)\s*\[(.*?)\]",
+                        re.IGNORECASE | re.DOTALL)
 # The prompt primes the next turn with "Thought N:"; models often echo that
 # label back. Strip one leading occurrence so the transcript is not doubled.
 _LEADING_THOUGHT_RE = re.compile(r"^\s*Thought\s*\d*\s*:\s*", re.IGNORECASE)
@@ -369,6 +377,7 @@ def make_react_record(row, prop, ep: dict[str, Any], model: str, provider: str,
         "react_steps": ep["steps"],
         "react_finished": ep["finished"],
         "react_tool_calls": ep["tool_calls"],
+        "action_parser": ACTION_PARSER_VERSION,
         "model": model,
         "provider": provider,
         "temperature": temperature,
@@ -389,7 +398,16 @@ def build_arg_parser(config: ModelConfig, here: Path):
     p.description = f"ReAct (Experiment 2) {config.label} run over the 300-graph dataset."
     p.add_argument("--max-steps", type=int, default=15,
                    help="Max Thought/Action/Observation steps before an episode gives up (default 15).")
+    p.add_argument("--only-pairs", type=Path, default=None,
+                   help="JSON list of [object_id, property] pairs: re-run exactly these episodes "
+                        "(implies --force for them only). Used by repair_action_parse.py.")
     return p
+
+
+def load_only_pairs(path: Path | None) -> set[tuple[str, str]] | None:
+    if path is None:
+        return None
+    return {(oid, prop) for oid, prop in json.loads(Path(path).read_text())}
 
 
 async def run(args, config: ModelConfig) -> None:
@@ -406,8 +424,17 @@ async def run(args, config: ModelConfig) -> None:
 
     dataset = gh.load_dataset(args.dataset, log)
     dataset = gh.apply_subset(dataset, args.subset)
-    completed = set() if args.force else gh.done_pairs(args.jsonl_output, args.retry_parse_failures)
-    tasks = gh.build_tasks(dataset, args.properties, completed, args.limit, args.force)
+    only = load_only_pairs(args.only_pairs)
+    if only is not None:
+        completed = set()
+        tasks = [(row, prop) for row, prop in gh.build_tasks(dataset, args.properties, completed, None, True)
+                 if (row["object_id"], prop) in only]
+        missing = only - {(row["object_id"], prop) for row, prop in tasks}
+        if missing:
+            raise RuntimeError(f"--only-pairs: {len(missing)} pair(s) not in dataset/subset, e.g. {sorted(missing)[:3]}")
+    else:
+        completed = set() if args.force else gh.done_pairs(args.jsonl_output, args.retry_parse_failures)
+        tasks = gh.build_tasks(dataset, args.properties, completed, args.limit, args.force)
 
     log.info("graphs=%d props=%d | planned episodes=%d | skipping=%d",
              len(dataset), len(args.properties), len(tasks), len(completed))

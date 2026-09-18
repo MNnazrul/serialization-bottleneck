@@ -16,10 +16,10 @@ Grading: identical to Experiment 1 (exact match for int/bool; avg_clustering
   V4-Pro*       480/480 episodes               zero-shot baseline: matched (same session)
 
 HEADLINE: ReAct helps LOCAL properties, hurts GLOBAL ones.
-  V4-Flash      local   +5.7pp [+3.8,+7.5]    global -13.3pp [-16.2,-10.3]
+  V4-Flash      local   +5.7pp [+3.8,+7.5]    global -13.3pp [-16.2,-10.4]
   Qwen3-32B     local   +5.7pp [+3.8,+7.5]    global -20.3pp [-23.1,-17.5]
-  Llama4-Scout  local   +6.7pp [+4.7,+8.8]    global  -5.8pp [-8.8,-2.8]
-  Gemini2.5-FL  local  -14.3pp [-18.2,-10.7]    global -12.7pp [-15.5,-9.9]
+  Llama4-Scout  local   +7.0pp [+5.0,+9.2]    global  -5.2pp [-8.2,-2.1]
+  Gemini2.5-FL  local   +5.5pp [+3.7,+7.5]    global -12.7pp [-15.5,-9.9]
   GPT-4.1-mini  local   +2.7pp [+1.5,+4.0]    global -16.6pp [-19.5,-13.7]
   V4-Pro*       local   +1.7pp [+0.0,+4.2]    global -19.4pp [-25.8,-12.8]
 
@@ -31,7 +31,7 @@ PER-PROPERTY (ReAct acc  ->  zero-shot acc   [ReAct finish rate])
     [G] is_planar           30.3% ->  33.7%   fin  31%   d  -3.3pp
     [G] triangle_count       2.3% ->   8.7%   fin   2%   d  -6.3pp
     [G] diameter            14.3% ->  41.7%   fin  18%   d -27.3pp
-    [G] chromatic_number     7.4% ->  51.8%   fin   8%   d -44.5pp
+    [G] chromatic_number     7.0% ->  51.8%   fin   7%   d -44.8pp
     [G] avg_clustering       1.0% ->  12.7%   fin   1%   d -11.7pp
 
   Qwen3-32B  (matched (same session))
@@ -45,18 +45,18 @@ PER-PROPERTY (ReAct acc  ->  zero-shot acc   [ReAct finish rate])
     [G] avg_clustering       1.3% ->   1.0%   fin   1%   d  +0.3pp
 
   Llama4-Scout  (matched (same session))
-    [L] degree_of_node_0    99.3% ->  88.0%   fin  99%   d +11.3pp
+    [L] degree_of_node_0   100.0% ->  88.0%   fin 100%   d +12.0pp
     [L] edge_count         100.0% ->  98.0%   fin 100%   d  +2.0pp
-    [G] is_bipartite        49.7% ->  76.0%   fin  73%   d -26.3pp
-    [G] is_planar           61.3% ->  70.0%   fin  83%   d  -8.7pp
+    [G] is_bipartite        51.3% ->  76.0%   fin  75%   d -24.7pp
+    [G] is_planar           62.7% ->  70.0%   fin  85%   d  -7.3pp
     [G] triangle_count       3.0% ->   0.3%   fin   9%   d  +2.7pp
     [G] diameter            12.0% ->  14.0%   fin  57%   d  -2.0pp
-    [G] chromatic_number    33.4% ->  36.1%   fin  86%   d  -2.7pp
-    [G] avg_clustering       3.0% ->   1.0%   fin  47%   d  +2.0pp
+    [G] chromatic_number    34.1% ->  36.1%   fin  86%   d  -2.0pp
+    [G] avg_clustering       3.3% ->   1.0%   fin  51%   d  +2.3pp
 
   Gemini2.5-FL  (matched (same session))
-    [L] degree_of_node_0    98.7% ->  89.0%   fin  99%   d  +9.7pp
-    [L] edge_count          61.7% -> 100.0%   fin  62%   d -38.3pp
+    [L] degree_of_node_0   100.0% ->  89.0%   fin 100%   d +11.0pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
     [G] is_bipartite        78.7% ->  79.0%   fin  83%   d  -0.3pp
     [G] is_planar           27.7% ->  41.7%   fin  29%   d -14.0pp
     [G] triangle_count       1.3% ->   5.0%   fin   1%   d  -3.7pp
@@ -84,6 +84,36 @@ PER-PROPERTY (ReAct acc  ->  zero-shot acc   [ReAct finish rate])
     [G] chromatic_number     6.7% ->  33.3%   fin   8%   d -26.7pp
     [G] avg_clustering       0.0% ->   1.7%   fin   0%   d  -1.7pp
 
+PER-TIER ACCURACY  (class-balanced is_bipartite / is_planar; see per_tier_accuracy.csv)
+  Positives per tier (simple/medium/hard, of 100):  is_bipartite 26/23/22   is_planar 52/21/20
+  ReAct
+    model          simple medium   hard  overall   plain-acc simple/medium/hard
+    Llama4-Scout    45.9%  42.0%  41.3%    43.1%   46.5/46.1/44.8
+    V4-Flash        48.3%  34.1%  32.9%    38.4%   48.8/38.9/37.4
+    GPT-4.1-mini    43.0%  35.1%  34.9%    37.7%   43.9/38.4/38.0
+    V4-Pro*         47.7%  33.1%  30.9%    37.2%   47.5/36.9/34.4
+    Gemini2.5-FL    37.9%  34.1%  33.7%    35.2%   39.2/39.1/38.4
+    Qwen3-32B       40.6%  31.9%  31.2%    34.6%   40.5/34.6/33.8
+  zero-shot (matched)
+    model          simple medium   hard  overall   plain-acc simple/medium/hard
+    V4-Flash        59.3%  48.1%  45.4%    50.9%   58.8/46.9/45.2
+    V4-Pro*         59.0%  51.9%  40.5%    50.5%   58.1/56.2/46.9
+    GPT-4.1-mini    54.8%  45.5%  40.4%    46.9%   56.6/51.4/47.6
+    Gemini2.5-FL    51.2%  43.0%  42.8%    45.7%   52.8/45.6/42.9
+    Qwen3-32B       50.3%  42.5%  40.6%    44.5%   53.1/49.5/47.8
+    Llama4-Scout    44.3%  41.8%  40.8%    42.3%   47.1/48.8/47.9
+  zero-shot (Experiment 1)
+    model          simple medium   hard  overall   plain-acc simple/medium/hard
+    V4-Pro*         58.1%  52.1%  43.4%    51.2%   56.9/55.6/50.0
+    V4-Flash        58.8%  48.4%  45.4%    50.8%   58.1/47.0/45.2
+    GPT-4.1-mini    54.1%  45.1%  39.9%    46.3%   56.0/50.9/47.1
+    Gemini2.5-FL    51.2%  43.0%  42.8%    45.7%   52.8/45.6/42.9
+    Qwen3-32B       50.2%  43.1%  40.9%    44.8%   53.0/50.1/48.2
+    Llama4-Scout    44.1%  41.9%  38.9%    41.7%   46.8/48.8/46.0
+  V4-Pro* is scored on its own 60-graph subsample (positives simple/medium/hard:
+  is_planar 10/5/4, is_bipartite 5/5/4 of 20), so its balanced score corrects its
+  own subsample skew; compare it to the full-300 models with that caveat.
+
 MECHANISM
   - Local properties (degree_of_node_0, edge_count) are one tool call away:
     ReAct issues Degree[0] / EdgeCount[] and finishes in ~2 steps, removing
@@ -93,19 +123,22 @@ MECHANISM
     often never reaches Finish (see finish rates above); zero-shot at least
     guesses from the full edge list in context. This is the paper's own
     trade-off (Table 2: the structural constraint raises reasoning-error rate).
-  - Loop overhead can also hurt a format-fragile model on an otherwise
-    trivial local property (watch Gemini edge_count).
+  - The 2026-08-30 run's action parser rejected decorated but valid actions
+    (`Action 3: [Finish[4]]`, `**Action 3:** ...`, backticks). That, not model
+    format fragility, caused Gemini's edge_count drop. Fixed 2026-09-16: 106
+    episodes replayed offline, 99 re-run (phase2_react_graph/_common/
+    repair_action_parse.py); records carry action_parser=2.
 
 REACT LOOP BEHAVIOUR (per model)
   V4-Flash      finish   43%   mean steps 10.2   mean steps|correct  3.6   no_finish   57%
   Qwen3-32B     finish   39%   mean steps 10.6   mean steps|correct  3.3   no_finish   61%
-  Llama4-Scout  finish   69%   mean steps 10.0   mean steps|correct  5.7   no_finish   31%
-  Gemini2.5-FL  finish   35%   mean steps 11.0   mean steps|correct  3.5   no_finish   65%
+  Llama4-Scout  finish   70%   mean steps  9.9   mean steps|correct  5.7   no_finish   30%
+  Gemini2.5-FL  finish   40%   mean steps 10.3   mean steps|correct  3.2   no_finish   60%
   GPT-4.1-mini  finish   43%   mean steps 10.4   mean steps|correct  3.7   no_finish   57%
   V4-Pro*       finish   40%   mean steps 10.5   mean steps|correct  3.8   no_finish   60%
 
-V4-Flash REACT FAILURE MODES (heuristic, n=1398, manual review pending)
-  no_finish_global     1377  (98%)
+V4-Flash REACT FAILURE MODES (heuristic, n=1399, manual review pending)
+  no_finish_global     1378  (98%)
   wrong_finish           21  (2%)
 
 NOTE

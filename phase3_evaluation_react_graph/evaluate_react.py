@@ -20,6 +20,7 @@ Outputs (created here):
   results/evaluation_summary.txt
   results/comparison_by_property.csv
   results/react_failure_analysis.json
+  results/per_tier_accuracy.csv
   figures/fig1_react_vs_zeroshot_by_property.png
   figures/fig2_locality_delta.png
   figures/fig3_react_finish_rate.png
@@ -216,6 +217,79 @@ for r in rows_present:
         out(f"    [{loc}] {p:18s} {100*ra:5.1f}% -> {100*za:5.1f}%   fin {100*fin:3.0f}%   d {100*(ra-za):+5.1f}pp")
     out("")
 
+# ---------------------------------------------------------------------------
+# Per-tier accuracy, with class-balanced scoring for the boolean properties
+# ---------------------------------------------------------------------------
+# The positive rate of is_planar / is_bipartite is NOT constant across tiers:
+# random_planar / random_bipartite are fixed at 20 / 22 per tier, but other
+# families leak positives on small graphs (simple tier: 32 extra planar graphs
+# from ER/BA/WS/bipartite, 4 extra bipartite from random_planar). is_planar is
+# 52% true on simple vs 21% / 20% on medium / hard. Plain accuracy then rewards
+# a constant "false" guess more on medium/hard than on simple, which is what
+# made e.g. Llama4-Scout zero-shot score higher on medium than on simple.
+# Scoring each boolean property as the mean of its true-class and false-class
+# accuracy *within each tier* (and within each model's own graph set, so the
+# V4-Pro* subsample's own balance is handled separately) makes a constant guess
+# worth 50% in every tier. Tier accuracy = mean over the 8 properties.
+
+TIERS = ("simple", "medium", "hard")
+BOOL_PROPS = {"is_bipartite", "is_planar"}
+
+
+def tier_accuracy(records: list[dict], tier: str, balanced: bool = True) -> float:
+    per_prop = []
+    for p in PROP_ORDER:
+        recs = [r for r in records if r["tier"] == tier and r["property"] == p]
+        if not recs:
+            continue
+        if balanced and p in BOOL_PROPS:
+            classes = [[is_correct(r) for r in recs if r["ground_truth"] is v] for v in (True, False)]
+            per_prop.append(np.mean([np.mean(c) for c in classes if c]))
+        else:
+            per_prop.append(np.mean([is_correct(r) for r in recs]))
+    return float(np.mean(per_prop)) * 100 if per_prop else float("nan")
+
+
+def tier_row(records: list[dict], balanced: bool = True) -> list[float]:
+    accs = [tier_accuracy(records, t, balanced) for t in TIERS]
+    overall = float(np.mean(accs))
+    return accs + [overall]
+
+
+TIER_ARMS = [("ReAct", lambda r: r["react"]),
+             ("zero-shot (matched)", lambda r: r["zs"]),
+             ("zero-shot (Experiment 1)",
+              lambda r: load(EXP1_DIR / r["folder"] / f"{r['key']}_results.json"))]
+
+with (RESULTS / "per_tier_accuracy.csv").open("w", newline="") as fh:
+    w = csv.writer(fh)
+    w.writerow(["arm", "model", "scoring", "simple", "medium", "hard", "overall", "monotonic"])
+    for arm_name, get in TIER_ARMS:
+        for r in rows_present:
+            recs = get(r)
+            for balanced in (True, False):
+                s, m_, h, o = tier_row(recs, balanced)
+                w.writerow([arm_name, r["label"], "balanced_bool" if balanced else "plain",
+                            f"{s:.1f}", f"{m_:.1f}", f"{h:.1f}", f"{o:.1f}", s >= m_ >= h])
+
+out("PER-TIER ACCURACY  (class-balanced is_bipartite / is_planar; see per_tier_accuracy.csv)")
+_ds = json.loads((ROOT / "phase1_dataset_graph" / "graph_exp1_dataset.json").read_text())
+out("  Positives per tier (simple/medium/hard, of 100):  " + "   ".join(
+    p + " " + "/".join(str(sum(1 for g in _ds if g["tier"] == t and g["properties"][p])) for t in TIERS)
+    for p in sorted(BOOL_PROPS)))
+for arm_name, get in TIER_ARMS:
+    out(f"  {arm_name}")
+    out(f"    {'model':13s}  {'simple':>6s} {'medium':>6s} {'hard':>6s}  {'overall':>7s}   plain-acc simple/medium/hard")
+    for r in sorted(rows_present, key=lambda r: -tier_row(get(r))[3]):
+        s, m_, h, o = tier_row(get(r))
+        ps, pm, ph, _ = tier_row(get(r), balanced=False)
+        flag = "" if s >= m_ >= h else "   <-- not monotonic"
+        out(f"    {r['label']:13s}  {s:5.1f}% {m_:5.1f}% {h:5.1f}%  {o:6.1f}%   {ps:4.1f}/{pm:4.1f}/{ph:4.1f}{flag}")
+out("  V4-Pro* is scored on its own 60-graph subsample (positives simple/medium/hard:")
+out("  is_planar 10/5/4, is_bipartite 5/5/4 of 20), so its balanced score corrects its")
+out("  own subsample skew; compare it to the full-300 models with that caveat.")
+out("")
+
 out("MECHANISM")
 out("  - Local properties (degree_of_node_0, edge_count) are one tool call away:")
 out("    ReAct issues Degree[0] / EdgeCount[] and finishes in ~2 steps, removing")
@@ -225,8 +299,11 @@ out("    spends its step budget on one-at-a-time HasEdge / Neighbors probes and"
 out("    often never reaches Finish (see finish rates above); zero-shot at least")
 out("    guesses from the full edge list in context. This is the paper's own")
 out("    trade-off (Table 2: the structural constraint raises reasoning-error rate).")
-out("  - Loop overhead can also hurt a format-fragile model on an otherwise")
-out("    trivial local property (watch Gemini edge_count).")
+out("  - The 2026-08-30 run's action parser rejected decorated but valid actions")
+out("    (`Action 3: [Finish[4]]`, `**Action 3:** ...`, backticks). That, not model")
+out("    format fragility, caused Gemini's edge_count drop. Fixed 2026-09-16: 106")
+out("    episodes replayed offline, 99 re-run (phase2_react_graph/_common/")
+out("    repair_action_parse.py); records carry action_parser=2.")
 out("")
 
 # steps stats for the ReAct arm
