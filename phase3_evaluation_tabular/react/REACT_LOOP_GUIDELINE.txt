@@ -1,0 +1,225 @@
+================================================================================
+REACT LOOP GUIDELINE - Experiment 2, Domain 3 (Tabular Data)
+================================================================================
+
+This file is the contract between Phase 2 (the ReAct runners) and Phase 3
+(evaluate_react.py in this folder). It defines the loop, the tool set, the
+stopping rule, the scoring policy, and the exact record schema Phase 3 reads.
+It is the tabular counterpart of ../phase2_react_graph/README.md.
+
+Nothing here changes the science of Experiment 1: same 300 tables, same 8
+properties, same grading thresholds. Experiment 2 only changes HOW the model is
+allowed to answer - a Thought/Action/Observation loop over structural tools
+instead of a single zero-shot call - and adds a matched zero-shot control run in
+the same session so the comparison is clean.
+
+Dataset revision (2026-09-09): the three yes/no properties (is_monotonic,
+has_outlier, func_dependency) are now balanced ~50% true within each tier, and
+has_outlier's ground truth is the Tukey fence (value below Q1-3*IQR or above
+Q3+3*IQR), not mean +- 3*std - the std rule was unsatisfiable for n <= 10 rows.
+The model-facing has_outlier question in harness.py changed to match. Every
+table now carries exactly 10 queries. Both ReAct and zero-shot arms must be
+(re-)run against this dataset build; the matched zero-shot control cannot fall
+back to Experiment 1's committed results for has_outlier (different question).
+
+
+--------------------------------------------------------------------------------
+1. THE LOOP
+--------------------------------------------------------------------------------
+
+One ReAct "episode" answers exactly one (table, question) pair - the same unit
+of work as one Experiment 1 query.
+
+The model is given the CSV, the question, the tool list, and the output format,
+then iterates:
+
+    Thought: <free-text reasoning about what to look up next>
+    Action:  <ToolName>[<args>]
+    Observation: <the tool's result, injected by the harness>// ... repeated ...
+    Thought: I now have enough to answer.
+    Action:  Finish[<answer>]
+
+- The harness parses one Action per turn, executes it, appends the Observation,
+  and calls the model again with the growing transcript.
+- Temperature 0. No system prompt. Zero-shot instructions for the loop format
+  only (a 1-shot format demo of the SYNTAX is allowed; no worked task example).
+- max_steps = 12 for the capped models, matching Experiment 1's spirit of a
+  bounded budget. V4-Pro (thinking) gets max_steps = 12 and max_tokens = 4096
+  per turn.
+- If the model emits a malformed Action, inject
+  "Observation: invalid action, expected one of: <tool list>" and count the
+  step. Repeated invalid actions still consume the budget.
+
+
+--------------------------------------------------------------------------------
+2. TOOL SET (tabular)
+--------------------------------------------------------------------------------
+
+All tools are read-only accessors over the SAME table the model already has in
+its prompt. They exist so the model can offload structure-tracking, not to give
+it information it did not have. Column names are the generic col_A ... col_L.
+
+    RowCount[]                 -> int         number of data rows (no header)
+    ColumnNames[]              -> list[str]   header, in order
+    ColumnDtype[col]           -> str         "numeric" | "categorical" | "datetime"
+    GetColumn[col]             -> list        every value in that column, in row order
+    GetCell[row, col]          -> value       single cell (row is 0-indexed data row)
+    NullCount[]                -> int         total missing cells in the table
+    Head[k]                    -> rows        first k rows as CSV (default k=5)
+    Finish[answer]             -> ends the episode; `answer` is graded
+
+Deliberately NOT provided: any tool that computes an aggregate the question is
+asking for (no Corr[a,b], no Skew[col], no IsMonotonic[col], no HasOutlier[col],
+no Describe[col]). The point of the experiment is to see whether the model can
+assemble an aggregate from primitive reads. Giving it Corr[] would make the
+correlation query trivial and measure nothing.
+
+GetColumn is the honest primitive for the global properties - one call returns
+the whole column and the model must then reason over it in-context. GetCell is
+included so we can observe the failure mode where a model probes one cell at a
+time and exhausts its budget.
+
+
+--------------------------------------------------------------------------------
+3. STOPPING RULE AND SCORING
+--------------------------------------------------------------------------------
+
+An episode ends when either:
+  (a) the model emits Finish[answer]  -> `answer` is parsed and graded, or
+  (b) react_steps reaches max_steps with no Finish  -> scored INCORRECT.
+
+Grading of a finished answer is IDENTICAL to Experiment 1's tabular Phase 3:
+
+    row_count, null_count            integer   exact match
+    column_dtype                     categorical exact match ("numeric"/"categorical"/"datetime")
+    is_monotonic, has_outlier,       boolean   exact match
+      func_dependency
+    correlation, skewness            numeric   relative error; headline tolerance
+                                               is 5% (correct_5pct). 1% and 10%
+                                               also recorded.
+
+The paper's CoT-SC back-off (fall back to sampled chain-of-thought and take a
+majority vote when the agent fails to finish) is DELIBERATELY NOT USED. A
+no-Finish episode is simply wrong. Rationale: we are measuring what the ReAct
+loop itself does, not a hybrid system, and a silent fallback would hide exactly
+the failure mode (budget exhaustion on global properties) the experiment is
+designed to surface.
+
+Answer parsing inside Finish[...] uses the same lenient pipeline as Experiment 1
+(JSON first, then a regex fallback for a bare number / true-false / dtype word).
+If Finish fired but its argument will not parse, parse_success = false and the
+record is scored incorrect and labelled unparseable_finish in the failure pass.
+
+
+--------------------------------------------------------------------------------
+4. THE MATCHED ZERO-SHOT CONTROL
+--------------------------------------------------------------------------------
+
+For every model that runs the ReAct arm, run the Experiment 1 method again -
+single call, no tools, "Respond with only a JSON object {"answer": ...}" - in
+the SAME session, same API keys, same day, over the SAME set of (table,
+question) pairs. Write it to <key>_zeroshot_results.json.
+
+This matters because Experiment 1's committed zero-shot results
+(../../phase2_tabular_model_results/) were produced in a different session, and
+with JSON mode ON for the providers that support it. Comparing ReAct against a
+same-session zero-shot control removes session drift and mode differences from
+the delta.
+
+Where the matched control was NOT run (a model whose credits ran out before the
+zero-shot pass), Phase 3 falls back to the Experiment 1 committed file and tags
+that row "Experiment 1 committed" in every output. Those rows are still usable
+but are a slightly noisier comparison - re-run for a clean pair when possible.
+
+
+--------------------------------------------------------------------------------
+5. RECORD SCHEMA (what Phase 3 reads)
+--------------------------------------------------------------------------------
+
+Each line/element of <key>_results.json (ReAct arm) and
+<key>_zeroshot_results.json (control) MUST carry every Experiment 1 field:
+
+    object_id, tier, source, query_id, property, property_locality,
+    columns, is_control, ground_truth, parsed_answer, parse_success,
+    correct, correct_1pct, correct_5pct, correct_10pct,
+    relative_error, absolute_error, raw_model_output, model, provider,
+    timestamp
+
+The ReAct arm additionally MUST carry:
+
+    react_steps       int    number of Action turns taken (Finish counts as one)
+    react_finished    bool   true iff the episode ended on a Finish action
+    react_tool_calls  list   [{"action": "GetColumn", "args": {...},
+                               "observation_len": 412}, ...]
+                             action == "invalid" for malformed turns;
+                             action == "Finish" for the terminating turn
+    react_transcript  str    full Thought/Action/Observation text (gitignored;
+                             ~kept for the manual failure pass only)
+
+Phase 3 uses: property, property_locality, tier, source, is_control, columns,
+correct* , relative_error, parsed_answer, parse_success, react_steps,
+react_finished, react_tool_calls. If react_finished is missing it is treated as
+false (i.e. no-Finish, incorrect).
+
+
+--------------------------------------------------------------------------------
+6. COVERAGE AND SUBSAMPLING
+--------------------------------------------------------------------------------
+
+- Capped models (V4-Flash, Qwen3-32B, Llama4-Scout, Gemini2.5-Flash-Lite,
+  GPT-4.1-mini): all 2,953 (table, question) pairs, both arms.
+- V4-Pro (thinking): the same fixed 20% tier-and-source-stratified subsample as
+  Experiment 1 (588 pairs), both arms. Regenerate/verify it with the Experiment 1
+  build_subsample.py so the two experiments cover the same objects.
+- Runners are resume-safe: they read the JSONL log on start, skip pairs already
+  done, and only fire the remainder. Safe to interrupt and re-run.
+- Expect ~240 MB of transcripts across six models - the raw
+  phase2_tabular_model_results/react/<NN>/*_results.json[l] files are gitignored. Only the
+  frozen Phase 3 outputs (results/, figures/) are committed.
+
+
+--------------------------------------------------------------------------------
+7. WHAT WE EXPECT TO SEE (and why the figures are built the way they are)
+--------------------------------------------------------------------------------
+
+Predicted result, mirroring the graph domain:
+
+  LOCAL properties  - ReAct RECOVERS accuracy. row_count / null_count / dtype
+                      are one tool call plus Finish. The zero-shot miscount on
+                      tall or wide tables disappears.
+
+  GLOBAL properties - ReAct LOSES accuracy. correlation and skewness require
+                      every value in a column; the model either probes cell by
+                      cell with GetCell and runs out of budget (no Finish,
+                      scored wrong), or pulls the column with GetColumn and
+                      still cannot compute the statistic reliably in-context.
+                      Zero-shot at least produces a guess from the full CSV.
+
+  is_monotonic / has_outlier / func_dependency sit in between - GetColumn plus a
+  scan is tractable, so ReAct may break roughly even here.
+
+Figures target exactly this:
+  fig1  per-property bars, zero-shot vs ReAct, one panel per model
+  fig2  ReAct - zero-shot delta, local vs global, 95% bootstrap CI
+  fig3  finish rate per property (the budget-exhaustion signal)
+  fig4  steps-per-episode histogram, split finish-correct / finish-wrong / no-finish
+  fig5  relative-error KDE for correlation AND skewness (two panels - the graph
+        domain had one, because avg_clustering was its only numeric property)
+
+
+--------------------------------------------------------------------------------
+8. KNOWN LIMITATIONS
+--------------------------------------------------------------------------------
+
+- Partial ReAct coverage for any model that hit API credit exhaustion mid-run;
+  its zero-shot column falls back to Experiment 1's committed results.
+- Dataset is currently 300/300 synthetic - the synthetic-vs-real contrast is not
+  measurable; `source` is kept as a hook only.
+- V4-Pro (thinking) already hit the 4096-token cap on 100% of correlation and
+  skewness queries in Experiment 1 zero-shot; its ReAct arm is expected to
+  rarely reach Finish on those two, so its numeric rows will be thin.
+- Failure labels from evaluate_react.py are heuristic first-pass labels;
+  manual_label is left null in react_failure_analysis.json for the review pass.
+- No cross-domain Section 9 decision here. Experiment 2 has been run on the
+  graph and tabular domains only; the go/no-go stays deferred.
+================================================================================

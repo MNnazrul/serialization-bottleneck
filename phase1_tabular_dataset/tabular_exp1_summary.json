@@ -1,0 +1,192 @@
+{
+  "total": 300,
+  "counts_by_tier_source": {
+    "simple": {
+      "synthetic": 100,
+      "real": 0
+    },
+    "medium": {
+      "synthetic": 100,
+      "real": 0
+    },
+    "hard": {
+      "synthetic": 100,
+      "real": 0
+    }
+  },
+  "distribution_by_tier": {
+    "simple": {
+      "n_rows": {
+        "min": 8,
+        "max": 15,
+        "mean": 11.06,
+        "median": 11.0,
+        "std": 2.120471645648675
+      },
+      "n_cols": {
+        "min": 4,
+        "max": 6,
+        "mean": 4.92,
+        "median": 5.0,
+        "std": 0.8207313811473277
+      },
+      "n_queries": {
+        "min": 10,
+        "max": 10,
+        "mean": 10.0,
+        "median": 10.0,
+        "std": 0.0
+      },
+      "csv_length": {
+        "min": 167,
+        "max": 621,
+        "mean": 322.34,
+        "median": 298.5,
+        "std": 89.52644525501948
+      },
+      "null_count": {
+        "min": 0,
+        "max": 4,
+        "mean": 1.09,
+        "median": 1.0,
+        "std": 1.0401442207694085
+      }
+    },
+    "medium": {
+      "n_rows": {
+        "min": 16,
+        "max": 30,
+        "mean": 23.28,
+        "median": 23.0,
+        "std": 4.271018613867189
+      },
+      "n_cols": {
+        "min": 6,
+        "max": 9,
+        "mean": 7.48,
+        "median": 7.0,
+        "std": 1.1617228585166086
+      },
+      "n_queries": {
+        "min": 10,
+        "max": 10,
+        "mean": 10.0,
+        "median": 10.0,
+        "std": 0.0
+      },
+      "csv_length": {
+        "min": 462,
+        "max": 1647,
+        "mean": 945.56,
+        "median": 869.5,
+        "std": 254.696577126588
+      },
+      "null_count": {
+        "min": 0,
+        "max": 10,
+        "mean": 2.22,
+        "median": 1.0,
+        "std": 2.6817158686184484
+      }
+    },
+    "hard": {
+      "n_rows": {
+        "min": 31,
+        "max": 50,
+        "mean": 41.21,
+        "median": 41.0,
+        "std": 5.931770393398585
+      },
+      "n_cols": {
+        "min": 9,
+        "max": 12,
+        "mean": 10.62,
+        "median": 11.0,
+        "std": 1.074988372030135
+      },
+      "n_queries": {
+        "min": 10,
+        "max": 10,
+        "mean": 10.0,
+        "median": 10.0,
+        "std": 0.0
+      },
+      "csv_length": {
+        "min": 1348,
+        "max": 3564,
+        "mean": 2287.37,
+        "median": 2247.5,
+        "std": 472.9379801834486
+      },
+      "null_count": {
+        "min": 0,
+        "max": 27,
+        "mean": 6.81,
+        "median": 4.0,
+        "std": 7.484243448739492
+      }
+    }
+  },
+  "boolean_base_rates": {
+    "is_monotonic": {
+      "n": 300,
+      "true_rate": 0.4666666666666667
+    },
+    "has_outlier": {
+      "n": 300,
+      "true_rate": 0.47333333333333333
+    },
+    "func_dependency": {
+      "n": 300,
+      "true_rate": 0.5
+    }
+  },
+  "boolean_base_rates_by_tier": {
+    "is_monotonic/simple": {
+      "n": 100,
+      "true_rate": 0.25
+    },
+    "is_monotonic/medium": {
+      "n": 100,
+      "true_rate": 0.5
+    },
+    "is_monotonic/hard": {
+      "n": 100,
+      "true_rate": 0.65
+    },
+    "has_outlier/simple": {
+      "n": 100,
+      "true_rate": 0.44
+    },
+    "has_outlier/medium": {
+      "n": 100,
+      "true_rate": 0.48
+    },
+    "has_outlier/hard": {
+      "n": 100,
+      "true_rate": 0.5
+    },
+    "func_dependency/simple": {
+      "n": 100,
+      "true_rate": 0.5
+    },
+    "func_dependency/medium": {
+      "n": 100,
+      "true_rate": 0.5
+    },
+    "func_dependency/hard": {
+      "n": 100,
+      "true_rate": 0.5
+    }
+  },
+  "total_queries": 3000,
+  "correlation_queries": {
+    "planted": 232,
+    "control": 209,
+    "planted_abs_r_min": 0.3011,
+    "control_abs_r_max": 0.1998,
+    "control_abs_r_mean": 0.09382344497607656
+  },
+  "real_data_populated": false,
+  "random_seed": 42
+}

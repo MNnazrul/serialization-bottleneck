@@ -1,0 +1,175 @@
+======================================================================
+LEGEND -- how to read this file
+======================================================================
+This is a human-readable preview of a few sample tables from
+tabular_exp1_dataset.json -- one block per (tier, source) combination
+currently populated (real-data blocks are absent until
+real_data_sources/manifest.json exists; see that folder's README).
+The CSV shown under each header is exactly the text a model receives.
+Ground truth for every property below is always recomputed from that
+CSV after the fact -- never taken from what the generator originally
+planted -- so a "monotonic" column can still end up is_monotonic=False
+if something (e.g. an injected outlier) broke it afterward, and a
+"correlated" pair's ground-truth r is the realized sample correlation,
+not the target the generator aimed for.
+
+Properties (locality noted in brackets):
+  row_count        [local]  data rows, header not counted
+  column_dtype     [local]  {numeric, categorical, datetime}, inferred
+                             from one column's realized cell values
+  null_count       [local]  total blank cells, whole table
+  correlation      [global] Pearson r between two numeric columns.
+                             "[control]" = an unrelated pair asked
+                             alongside a real correlated one (when the
+                             table has one) to catch models that always
+                             guess "correlated" regardless of the data;
+                             "[planted]" = the pair that really was
+                             constructed to correlate
+  is_monotonic     [global] True iff every consecutive value in the
+                             column is non-decreasing, or every one is
+                             non-increasing. One out-of-order value
+                             (including an injected outlier) is enough
+                             to make this False even if the rest of the
+                             column climbs or falls steadily throughout
+  has_outlier      [global] True iff some value falls outside the
+                             column's own Tukey fence: compute Q1 and Q3
+                             (the 25th and 75th percentiles) and
+                             IQR = Q3 - Q1, then flag anything below
+                             Q1 - 3*IQR or above Q3 + 3*IQR. This is the
+                             standard "extreme outlier" cutoff; unlike a
+                             mean +/- 3*std rule it is well-defined even
+                             on short columns (a single extreme point
+                             can't inflate the IQR out of its own reach
+                             the way it inflates the standard deviation).
+                             When True below, the column's Q1/Q3/IQR, the
+                             resulting fence, and the exact row/value that
+                             crossed it are all shown
+  skewness         [global] Pearson's moment skewness of a numeric
+                             column (~0 symmetric, >0 long right tail,
+                             <0 long left tail) -- a rough direction
+                             hint is appended below, purely descriptive
+  func_dependency  [global] True iff every row sharing the same value
+                             in column A also shares the same value in
+                             column B (B is fully determined by A)
+
+"local" properties are readable from one cell/column in isolation;
+"global" ones require aggregating the whole column -- comparing model
+accuracy on these two groups is this project's central diagnostic (see
+phase3_tabular_evaluation/evaluate.py's local-global gap).
+======================================================================
+
+=== table_simple_synthetic_001 (tier=simple, source=synthetic, 9 rows x 4 cols) ===
+col_A,col_B,col_C,col_D
+UDL,VQW,7.35,28.49
+LGW,VQW,-6.84,7.21
+UDL,ZKP,-8.90,4.12
+TSL,VTN,-16.48,-7.25
+GFU,ZKP,12.61,36.38
+UDL,VQW,-8.44,4.81
+UDL,PSB,-12.62,-1.46
+UDL,VTN,-11.46,0.28
+GFU,FGB,2.06,20.56
+
+queries (10):
+  row_count: 9
+  null_count: 0
+  column_dtype__col_B: categorical
+  column_dtype__col_C: numeric
+  is_monotonic__col_D: False
+  has_outlier__col_C: False
+  skewness__col_C: 0.8069  <- right-skewed (long tail toward high values)
+  func_dependency__col_C__col_D: True
+  column_dtype__col_D: numeric
+  skewness__col_D: 0.8067  <- right-skewed (long tail toward high values)
+
+=== table_medium_synthetic_001 (tier=medium, source=synthetic, 30 rows x 8 cols) ===
+col_A,col_B,col_C,col_D,col_E,col_F,col_G,col_H
+2021-01-02,288,259.52,QMQ,YRK,-21,136.06,HTW
+2021-01-03,72,224.25,VLV,MZT,-14,120.88,HTW
+2021-01-03,87,176.63,QMQ,MZT,1,148.79,JCG
+2021-01-06,132,227.57,WYU,JQA,-1,162.58,JCG
+2021-01-07,84,130.04,QMQ,MZT,-3,136.91,YQW
+2021-01-07,202,262.09,QMQ,MZT,-3,263.94,HTW
+2021-01-09,143,315.77,VLV,VHW,-8,134.19,JCG
+2021-01-08,70,-8.52,QMQ,MZT,-15,235.56,HTW
+2021-01-10,150,272.05,QMQ,YRK,-22,122.29,HTW
+2021-01-12,257,269.57,VLV,JQA,-12,260.80,JXE
+2021-01-13,230,231.81,PLH,CWQ,-5,133.49,HTW
+2021-01-13,148,220.70,PLH,WZW,4,166.58,JXE
+2021-01-13,89,256.65,QMQ,WHH,-10,189.67,JCG
+2021-01-15,59,227.82,QMQ,MZT,-9,115.74,FVF
+2021-01-15,254,229.67,QMQ,VHW,-11,233.23,YQW
+2021-01-17,207,211.33,PLH,MZT,-35,141.79,JCG
+2021-01-17,168,362.11,QMQ,JQA,-22,188.10,YQW
+2021-01-19,254,6.88,QMQ,PCD,94,188.16,JCG
+2021-01-19,43,238.37,PLH,MZT,60,197.10,YQW
+2021-01-22,199,172.79,UKE,VHW,-5,104.81,HTW
+2021-01-22,69,318.39,UKE,MZT,-8,123.89,JCG
+2021-01-24,42,262.74,PLH,WHH,-3,122.64,YQW
+2021-01-23,139,276.60,QMQ,WHH,-14,146.40,HTW
+2021-01-26,117,67.41,VLV,JQA,-12,119.90,HTW
+2021-01-25,271,270.76,UKE,CWQ,-1,250.96,YQW
+2021-01-26,99,154.21,QMQ,MZT,-22,181.98,JCG
+2021-01-27,236,275.14,QMQ,WHH,-10,200.64,JXE
+2021-01-28,218,261.43,QMQ,WHH,2,155.75,JXE
+2021-01-30,195,246.05,VLV,WHH,-8,142.05,YQW
+2021-01-30,266,92.13,VLV,MZT,96,180.33,YQW
+
+queries (10):
+  row_count: 30
+  null_count: 0
+  column_dtype__col_A: datetime
+  column_dtype__col_C: numeric
+  correlation__col_C__col_F: -0.4434  [planted]
+  is_monotonic__col_G: False
+  has_outlier__col_F: True  <- Q1=-13.50, Q3=-1.50, IQR=12.00, so the k=3 Tukey fence is [-49.50, 34.50] -- row 18=94 (outside [-49.50, 34.50]); row 19=60 (outside [-49.50, 34.50]); row 30=96 (outside [-49.50, 34.50])
+  skewness__col_C: -1.1903  <- left-skewed (long tail toward low values)
+  func_dependency__col_C__col_H: True
+  correlation__col_F__col_G: 0.1596  [control]
+
+=== table_hard_synthetic_001 (tier=hard, source=synthetic, 32 rows x 10 cols) ===
+col_A,col_B,col_C,col_D,col_E,col_F,col_G,col_H,col_I,col_J
+BWW,XKG,KGS,WZA,2023-04-08,KVD,VHP,-78,454.70,HZT
+ZAY,DBT,LKE,TYS,2023-04-09,LWG,PYP,-75,533.62,QYU
+SSZ,BVF,LKE,PAG,2023-04-11,KUV,PYP,-71,491.28,GTC
+ZAY,DBT,LKE,HBX,2023-04-15,KVD,SWJ,-64,545.43,QYU
+ZAY,DBT,YSG,HBX,2023-04-15,LWG,PYP,-79,485.19,QYU
+ZFF,BVF,KGS,WZA,2023-04-17,UZQ,SWJ,-110,469.93,GTC
+ZAY,DBT,KGS,PAG,2023-04-19,LWG,VHP,-78,407.31,GTC
+SSZ,BVF,KGS,WZA,2023-04-23,KUV,NMM,-74,549.99,GTC
+SSZ,BVF,KGS,MBP,2023-04-24,SGY,NMM,-85,405.19,GTC
+WMR,NSW,YSG,MBP,2023-04-27,EHW,PYP,-68,521.37,GTC
+SSZ,BVF,ZKF,TYS,2023-04-28,KUV,SWJ,-69,580.95,GTC
+WMR,NSW,YSG,WZA,2023-04-30,EHW,UKJ,-75,497.77,QYU
+SSZ,BVF,ZKF,PAG,2023-05-02,KVD,VHP,-72,476.47,QYU
+WMR,NSW,YSG,PAG,2023-05-04,LWG,UKJ,-71,536.19,HZT
+SSZ,BVF,LKE,TYS,2023-05-05,KVD,VHP,-77,491.52,QYU
+BWW,XKG,ZKF,HBX,2023-05-07,SGY,NMM,-76,551.07,QYU
+ZFF,BVF,KGS,PAG,2023-05-09,LWG,NMM,-79,479.52,HZT
+ZAY,DBT,KGS,TYS,2023-05-12,HJW,PYP,-70,534.04,HZT
+SSZ,BVF,ZKF,HBX,2023-05-13,KVD,VHP,-72,519.83,HZT
+CXG,SRZ,YSG,TYS,2023-05-17,NXK,NMM,-74,539.49,QYU
+ZAY,DBT,ZKF,HBX,2023-05-17,KVD,NMM,-62,636.19,QYU
+SSZ,BVF,KGS,TYS,2023-05-21,KVD,PYP,-73,551.90,GTC
+WMR,NSW,YSG,WZA,2023-05-23,KVD,PYP,-68,569.79,QYU
+ZAY,DBT,KGS,WZA,2023-05-25,KVD,UKJ,-75,503.48,GTC
+SSZ,BVF,LKE,TYS,2023-05-25,KUV,VHP,-119,553.28,GTC
+SSZ,BVF,ZKF,TYS,2023-05-29,UZQ,JGC,-72,524.04,HZT
+BWW,XKG,LKE,PAG,2023-05-31,HJW,SWJ,-73,541.91,QYU
+SSZ,BVF,YSG,PAG,2023-06-01,EHW,JGC,-72,578.28,GTC
+WMR,NSW,ZKF,HBX,2023-06-03,NXK,NMM,-75,510.80,GTC
+CXG,SRZ,ZKF,TYS,2023-06-06,SGY,PYP,-78,516.80,QYU
+ZFF,BVF,KGS,HBX,2023-06-06,LWG,SWJ,-80,511.61,GTC
+ZAY,DBT,KGS,PAG,2023-06-08,KVD,SWJ,-74,510.48,QYU
+
+queries (10):
+  row_count: 32
+  null_count: 0
+  column_dtype__col_D: categorical
+  column_dtype__col_E: datetime
+  correlation__col_I__col_H: 0.3079  [planted]
+  is_monotonic__col_I: False
+  has_outlier__col_H: True  <- Q1=-78.00, Q3=-71.75, IQR=6.25, so the k=3 Tukey fence is [-96.75, -53.00] -- row 6=-110 (outside [-96.75, -53.00]); row 25=-119 (outside [-96.75, -53.00])
+  skewness__col_H: -2.7752  <- left-skewed (long tail toward low values)
+  func_dependency__col_A__col_B: True
+  column_dtype__col_G: categorical
