@@ -54,18 +54,22 @@ RNG_SEED = 0
 
 # (folder, key, label, full episode count for coverage reporting)
 MODELS = [
-    ("01_v4flash", "v4flash", "V4-Flash", 2399),
-    ("02_qwen3", "qwen3", "Qwen3-32B", 2399),
-    ("03_llama_scout", "llama_scout", "Llama4-Scout", 2399),
-    ("04_gemini", "gemini", "Gemini2.5-FL", 2399),
-    ("05_gpt", "gpt", "GPT-4.1-mini", 2399),
-    ("06_v4pro_nonthinking", "v4pro_nonthinking", "V4-Pro*", 480),
+    ("01_v4flash", "v4flash", "V4-Flash", 1800),
+    ("02_qwen3", "qwen3", "Qwen3-32B", 1800),
+    ("03_llama_scout", "llama_scout", "Llama4-Scout", 1800),
+    ("04_gemini", "gemini", "Gemini2.5-FL", 1800),
+    ("05_gpt", "gpt", "GPT-4.1-mini", 1800),
+    ("06_v4pro_nonthinking", "v4pro_nonthinking", "V4-Pro*", 360),
 ]
 
+# Same 6 properties Experiment 1's Phase 3 evaluates since PR #9: triangle_count
+# and avg_clustering are dropped (exactly 0 on every bipartite graph, and
+# is_bipartite is 50/50 per tier, so "always 0" scored a free ~50%). The
+# zero-shot logs still contain them; they are filtered out on load.
 PROP_ORDER = [
     "degree_of_node_0", "edge_count",              # local
-    "is_bipartite", "is_planar", "triangle_count",
-    "diameter", "chromatic_number", "avg_clustering",  # global
+    "is_bipartite", "is_planar",
+    "diameter", "chromatic_number",                # global
 ]
 LOCAL = {"degree_of_node_0", "edge_count"}
 
@@ -74,10 +78,22 @@ LOCAL = {"degree_of_node_0", "edge_count"}
 # Load
 # ---------------------------------------------------------------------------
 
+DATASET = json.loads((ROOT / "phase1_dataset_graph" / "graph_exp1_dataset.json").read_text())
+EDGE_LISTS = {g["object_id"]: g["edge_list"] for g in DATASET}
+
+
 def load(path: Path) -> list[dict]:
+    """Records for the evaluated properties. Refuses records produced against a
+    different dataset version: object_ids were reused when PR #9 regenerated
+    the graphs, so a stale log would otherwise be scored against new ground truth."""
     if not path.exists():
         return []
-    return json.loads(path.read_text())
+    recs = [r for r in json.loads(path.read_text()) if r["property"] in PROP_ORDER]
+    stale = [r["object_id"] for r in recs if EDGE_LISTS.get(r["object_id"], "\0") not in r["prompt"]]
+    if stale:
+        raise SystemExit(f"{path}: {len(stale)} record(s) were run on a different graph than the "
+                         f"current dataset (e.g. {stale[0]}). Re-run Phase 2 for this model.")
+    return recs
 
 
 def is_correct(rec: dict) -> bool:
@@ -185,13 +201,14 @@ def out(s: str = "") -> None:
 
 out("EXPERIMENT 2 (ReAct) - GRAPH DOMAIN - EVALUATION SUMMARY")
 out("=" * 60)
-out("Task: recover 8 properties from text-serialized (edge-list) graphs with a")
+out("Task: recover graph properties from text-serialized (edge-list) graphs with a")
 out("      ReAct Thought/Action/Observation loop over structural tools")
 out("      (Neighbors / Degree / HasEdge / Nodes / EdgeCount / Finish),")
 out("      vs a matched single-call zero-shot baseline (Experiment 1's method).")
-out("Grading: identical to Experiment 1 (exact match for int/bool; avg_clustering")
-out("         at 1% relative error). ReAct episodes that never reach Finish are")
-out("         scored incorrect (no CoT-SC back-off).")
+out("Grading: identical to Experiment 1 (exact match; all evaluated properties are")
+out("         int/bool). Evaluated: the same 6 properties as Experiment 1's Phase 3")
+out("         (triangle_count / avg_clustering dropped). ReAct episodes that never")
+out("         reach Finish are scored incorrect (no CoT-SC back-off).")
 out("")
 for r in rows_present:
     cov = f"{len(r['react'])}/{r['full_n']} episodes" + ("  [PARTIAL - credits]" if r["partial"] else "")
@@ -220,17 +237,15 @@ for r in rows_present:
 # ---------------------------------------------------------------------------
 # Per-tier accuracy, with class-balanced scoring for the boolean properties
 # ---------------------------------------------------------------------------
-# The positive rate of is_planar / is_bipartite is NOT constant across tiers:
-# random_planar / random_bipartite are fixed at 20 / 22 per tier, but other
-# families leak positives on small graphs (simple tier: 32 extra planar graphs
-# from ER/BA/WS/bipartite, 4 extra bipartite from random_planar). is_planar is
-# 52% true on simple vs 21% / 20% on medium / hard. Plain accuracy then rewards
-# a constant "false" guess more on medium/hard than on simple, which is what
-# made e.g. Llama4-Scout zero-shot score higher on medium than on simple.
-# Scoring each boolean property as the mean of its true-class and false-class
-# accuracy *within each tier* (and within each model's own graph set, so the
-# V4-Pro* subsample's own balance is handled separately) makes a constant guess
-# worth 50% in every tier. Tier accuracy = mean over the 8 properties.
+# If the positive rate of is_planar / is_bipartite differs between tiers, plain
+# accuracy rewards a constant "false" guess more in the low-positive tiers. On
+# the pre-PR#9 dataset is_planar was 52% true on simple vs ~20% on medium/hard,
+# which put Llama4-Scout zero-shot's medium tier above simple. PR #9 makes both
+# booleans exactly 50/50 per tier, so on the full 300 balanced == plain; the
+# balanced score is kept as a guard, and it still corrects any skew left in the
+# V4-Pro* 60-graph subsample. Each boolean property is scored as the mean of its
+# true-class and false-class accuracy within each tier and within each model's
+# own graph set. Tier accuracy is the mean over the evaluated properties.
 
 TIERS = ("simple", "medium", "hard")
 BOOL_PROPS = {"is_bipartite", "is_planar"}
@@ -248,6 +263,26 @@ def tier_accuracy(records: list[dict], tier: str, balanced: bool = True) -> floa
         else:
             per_prop.append(np.mean([is_correct(r) for r in recs]))
     return float(np.mean(per_prop)) * 100 if per_prop else float("nan")
+
+
+def tier_gap_ci(records: list[dict], easier: str, harder: str,
+                n: int = 2000, seed: int = RNG_SEED) -> tuple[float, float, float]:
+    """(harder - easier) tier accuracy in pp, with a 95% bootstrap CI that
+    resamples whole graphs within each tier."""
+    by_tier = {t: {} for t in (easier, harder)}
+    for r in records:
+        if r["tier"] in by_tier:
+            by_tier[r["tier"]].setdefault(r["object_id"], []).append(r)
+    rng = np.random.default_rng(seed)
+
+    def score(tier, ids):
+        return tier_accuracy([r for i in ids for r in by_tier[tier][i]], tier)
+
+    ids = {t: list(by_tier[t]) for t in by_tier}
+    obs = score(harder, ids[harder]) - score(easier, ids[easier])
+    diffs = [score(harder, rng.choice(ids[harder], len(ids[harder])))
+             - score(easier, rng.choice(ids[easier], len(ids[easier]))) for _ in range(n)]
+    return obs, float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))
 
 
 def tier_row(records: list[dict], balanced: bool = True) -> list[float]:
@@ -273,21 +308,45 @@ with (RESULTS / "per_tier_accuracy.csv").open("w", newline="") as fh:
                             f"{s:.1f}", f"{m_:.1f}", f"{h:.1f}", f"{o:.1f}", s >= m_ >= h])
 
 out("PER-TIER ACCURACY  (class-balanced is_bipartite / is_planar; see per_tier_accuracy.csv)")
-_ds = json.loads((ROOT / "phase1_dataset_graph" / "graph_exp1_dataset.json").read_text())
-out("  Positives per tier (simple/medium/hard, of 100):  " + "   ".join(
-    p + " " + "/".join(str(sum(1 for g in _ds if g["tier"] == t and g["properties"][p])) for t in TIERS)
-    for p in sorted(BOOL_PROPS)))
+def positives(graphs: list[dict]) -> str:
+    return "   ".join(
+        p + " " + "/".join(f"{sum(1 for g in graphs if g['tier'] == t and g['properties'][p])}"
+                           f" of {sum(1 for g in graphs if g['tier'] == t)}" for t in TIERS)
+        for p in sorted(BOOL_PROPS))
+
+
+_sub_ids = set(json.loads((REACT_DIR / "06_v4pro_nonthinking" / "subsample_v4pro_nonthinking.json")
+                          .read_text())["object_ids"])
+out("  Positives per tier (simple/medium/hard):")
+out("    full 300   " + positives(DATASET))
+out("    V4-Pro* 60 " + positives([g for g in DATASET if g["object_id"] in _sub_ids]))
 for arm_name, get in TIER_ARMS:
     out(f"  {arm_name}")
     out(f"    {'model':13s}  {'simple':>6s} {'medium':>6s} {'hard':>6s}  {'overall':>7s}   plain-acc simple/medium/hard")
     for r in sorted(rows_present, key=lambda r: -tier_row(get(r))[3]):
         s, m_, h, o = tier_row(get(r))
         ps, pm, ph, _ = tier_row(get(r), balanced=False)
-        flag = "" if s >= m_ >= h else "   <-- not monotonic"
-        out(f"    {r['label']:13s}  {s:5.1f}% {m_:5.1f}% {h:5.1f}%  {o:6.1f}%   {ps:4.1f}/{pm:4.1f}/{ph:4.1f}{flag}")
-out("  V4-Pro* is scored on its own 60-graph subsample (positives simple/medium/hard:")
-out("  is_planar 10/5/4, is_bipartite 5/5/4 of 20), so its balanced score corrects its")
-out("  own subsample skew; compare it to the full-300 models with that caveat.")
+        out(f"    {r['label']:13s}  {s:5.1f}% {m_:5.1f}% {h:5.1f}%  {o:6.1f}%   {ps:4.1f}/{pm:4.1f}/{ph:4.1f}")
+        for easier, harder, a, b in (("simple", "medium", s, m_), ("medium", "hard", m_, h)):
+            if b > a:
+                d, lo, hi = tier_gap_ci(get(r), easier, harder)
+                verdict = "within noise" if lo <= 0 <= hi else "SIGNIFICANT"
+                out(f"      ^ not monotonic: {harder} - {easier} = {d:+.1f}pp, "
+                    f"95% CI [{lo:+.1f},{hi:+.1f}] ({verdict})")
+out("  V4-Pro* is scored on its own 60-graph subsample; compare it to the full-300")
+out("  models with that caveat.")
+# Euler's bound: a simple planar graph has m <= 3n - 6. Both n and m are in the
+# serialization header, so for graphs with m > 3n - 6 is_planar is decidable
+# without reading any edge. PR #9's denser large graphs make this more common
+# in harder tiers, which lets a ReAct model answer Nodes[] -> EdgeCount[] ->
+# Finish[false] and lifts hard-tier is_planar above medium. Reported, not
+# filtered: excluding these graphs would diverge from Experiment 1's scoring.
+_euler = [sum(1 for g in DATASET if g["tier"] == t and g["num_edges"] > 3 * g["num_nodes"] - 6)
+          for t in TIERS]
+out(f"  is_planar decidable from the header alone (m > 3n-6, so provably non-planar):")
+out(f"    simple/medium/hard = {_euler[0]}/{_euler[1]}/{_euler[2]} of 100 graphs. ReAct models use")
+out("    this shortcut (Nodes[] -> EdgeCount[] -> Finish[false]), which raises")
+out("    hard-tier is_planar above medium; see the per-property rows above.")
 out("")
 
 out("MECHANISM")
@@ -299,11 +358,10 @@ out("    spends its step budget on one-at-a-time HasEdge / Neighbors probes and"
 out("    often never reaches Finish (see finish rates above); zero-shot at least")
 out("    guesses from the full edge list in context. This is the paper's own")
 out("    trade-off (Table 2: the structural constraint raises reasoning-error rate).")
-out("  - The 2026-08-30 run's action parser rejected decorated but valid actions")
-out("    (`Action 3: [Finish[4]]`, `**Action 3:** ...`, backticks). That, not model")
-out("    format fragility, caused Gemini's edge_count drop. Fixed 2026-09-16: 106")
-out("    episodes replayed offline, 99 re-run (phase2_react_graph/_common/")
-out("    repair_action_parse.py); records carry action_parser=2.")
+out("  - The action parser accepts decorated but valid actions (`Action 3: [Finish[4]]`,")
+out("    `**Action 3:** ...`, backticks). The pre-PR#9 run's strict parser rejected")
+out("    them, which caused a spurious Gemini edge_count drop; this run used the")
+out("    fixed parser from the start (records carry action_parser=2).")
 out("")
 
 # steps stats for the ReAct arm

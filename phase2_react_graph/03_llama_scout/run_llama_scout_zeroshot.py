@@ -41,6 +41,10 @@ CONFIG = ModelConfig(
     default_json_mode="on",
     default_subset="none",
     model_help="Llama 4 Scout via OpenRouter.",
+    # Same as ../../phase2_model_results_graph/03_llama_scout/run_llama_scout_full.py
+    # (PR #9): keeps the response_format-less OpenRouter fallback inside 512 tokens.
+    extra_prompt_suffix=("\n\nDo not show any reasoning, steps, or explanation. "
+                          "Output ONLY the JSON object on a single line, nothing else."),
 )
 
 if __name__ == "__main__":

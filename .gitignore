@@ -12,3 +12,6 @@ phase2_model_results_graph/phase2_commands.txt
 # phase2_react_graph/<NN_model>/run_*_react.py and run_*_zeroshot.py (resume-safe).
 phase2_react_graph/*/*_results.json
 phase2_react_graph/*/*_results.jsonl
+
+# Experiment 2 raw results from the pre-PR#9 dataset (v1, 2026-08-30 run), kept locally for reference.
+phase2_react_graph/_archive_*/

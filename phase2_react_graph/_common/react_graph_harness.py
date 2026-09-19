@@ -393,8 +393,16 @@ def make_react_record(row, prop, ep: dict[str, Any], model: str, provider: str,
 # CLI + run  (same surface as graph_harness, plus --max-steps)
 # ---------------------------------------------------------------------------
 
+# The properties Experiment 1's Phase 3 evaluates since PR #9. triangle_count and
+# avg_clustering are exactly 0 on every bipartite graph, and is_bipartite is 50/50
+# per tier, so "always answer 0" scores a free ~50% on them. Experiment 1 drops them
+# from evaluation; ReAct does not query them at all (they were ~1/3 of its API cost).
+REACT_PROPERTIES = [p for p in gh.PROPERTIES if p not in ("triangle_count", "avg_clustering")]
+
+
 def build_arg_parser(config: ModelConfig, here: Path):
     p = gh.build_arg_parser(config, here)
+    p.set_defaults(properties=list(REACT_PROPERTIES))
     p.description = f"ReAct (Experiment 2) {config.label} run over the 300-graph dataset."
     p.add_argument("--max-steps", type=int, default=15,
                    help="Max Thought/Action/Observation steps before an episode gives up (default 15).")

@@ -1,7 +1,7 @@
 # Experiment 2 — ReAct on Domain 2 (Graphs)
 
 An **additional evaluation experiment** on top of Experiment 1's graph domain.
-Same 300-graph dataset, same 8 questions, same ground truth, same scoring — but
+Same 300-graph dataset, same questions, same ground truth, same scoring — but
 each question is answered with an interleaved **Thought / Action / Observation**
 loop (Yao et al., 2023, *"ReAct: Synergizing Reasoning and Acting in Language
 Models"*, `2210.03629v3.pdf`) instead of a single zero-shot call.
@@ -20,9 +20,20 @@ mechanism, logging, JSON export, the cost summary, and the CLI. Only the call
 changes: one API call per question becomes a capped ReAct loop. No file
 outside `phase2_react_graph/` is modified.
 
-**Run 2026-08-30/09-01.** All six models have a full ReAct run and a matched
-same-session zero-shot control; results live beside each runner (gitignored —
-see §5). The harness is also validated offline (`_common/selftest_react.py`,
+**Dataset version.** This branch is built on PR #9, which regenerated the
+Phase-1 graphs: equal family sizes, and `is_bipartite` / `is_planar` exactly
+50/50 in every tier. Every graph changed, so Experiment 2 was **re-run in full
+on 2026-09-18**. ReAct queries the **6 properties** that Experiment 1's Phase 3
+evaluates. PR #9 dropped `triangle_count` / `avg_clustering` because both are
+exactly 0 on every bipartite graph, so "always 0" scored a free ~50%. The
+zero-shot control still logs all 8, exactly like Experiment 1, and Phase 3
+filters them. Results from the pre-PR#9 dataset (2026-08-30 run) are kept
+locally in `_archive_dataset_v1_2026-08-30/` (gitignored). Phase 3 refuses any
+record whose prompt does not contain the current dataset's edge list, because
+object_ids were reused across versions.
+
+All six models have a full ReAct run and a matched same-session zero-shot
+control; results live beside each runner (gitignored — see §5). The harness is also validated offline (`_common/selftest_react.py`,
 all six `--dry-run`). Re-running needs your keys in `.env` (root README §"API
 keys") and is a paid operation; every runner resumes by `(object_id, property)`.
 
@@ -32,21 +43,25 @@ keys") and is a paid operation; every runner resumes by `(object_id, property)`.
 
 | Folder | Model | Coverage | Episodes |
 |--------|-------|----------|----------|
-| `01_v4flash/` | DeepSeek-V4-Flash | full 300 | 2,399 |
-| `02_qwen3/` | Qwen3-32B | full 300 | 2,399 |
-| `03_llama_scout/` | Llama 4 Scout | full 300 | 2,399 |
-| `04_gemini/` | Gemini 2.5 Flash-Lite | full 300 | 2,399 |
-| `05_gpt/` | GPT-4.1 Mini | full 300 | 2,399 |
-| `06_v4pro_nonthinking/` | DeepSeek-V4-Pro, thinking OFF | 20% subsample (60) | 480 |
+| `01_v4flash/` | DeepSeek-V4-Flash | full 300 | 1,800 |
+| `02_qwen3/` | Qwen3-32B | full 300 | 1,800 |
+| `03_llama_scout/` | Llama 4 Scout | full 300 | 1,800 |
+| `04_gemini/` | Gemini 2.5 Flash-Lite | full 300 | 1,800 |
+| `05_gpt/` | GPT-4.1 Mini | full 300 | 1,800 |
+| `06_v4pro_nonthinking/` | DeepSeek-V4-Pro, thinking OFF | 20% subsample (60) | 360 |
 | `_common/` | *(not a model)* | — | shared harness + offline self-test |
 
 Same models, providers, prices, coverage, and 20%-subsample selection as
 [`../phase2_model_results_graph/`](../phase2_model_results_graph/README.md).
-2,399 = 300 × 8 − 1 uncertified `chromatic_number` pair (0 on the committed
-dataset — the count is 2,399 only because `build_tasks` still runs the check).
+1,800 = 300 graphs × 6 ReAct properties (`REACT_PROPERTIES` in the harness;
+the PR #9 dataset has no uncertified `chromatic_number`). The zero-shot control
+runs 300 × 8 = 2,400 queries, the same as Experiment 1.
 `06`'s `build_subsample.py` and `subsample_v4pro_nonthinking.json` are copied
-verbatim from the Experiment-1 graph folder, so the same 60 graphs are used
-(seed 42); `python build_subsample.py --verify` confirms it.
+verbatim from the Experiment-1 graph folder as of PR #9, whose builder is
+stratified so the subsample keeps the boolean balance. The same 60 graphs are
+used (seed 42); `python build_subsample.py --verify` confirms it.
+`03`'s zero-shot runner carries the same `extra_prompt_suffix` as Experiment 1's
+Llama runner (PR #9's OpenRouter routing fix).
 
 An "episode" is one ReAct loop for one `(graph, property)` pair. Each model
 folder writes, on first run:
@@ -193,12 +208,15 @@ growing over 3–8 turns). Very approximate full-run totals — **measure with
 
 | Model | Full-run episodes | ≈ cost |
 |-------|-------------------|--------|
-| 01 V4-Flash | 2,399 | ~$2–6 |
-| 02 Qwen3-32B | 2,399 | ~$1.5–5 |
-| 03 Llama-4 Scout | 2,399 | ~$2–6 |
-| 04 Gemini 2.5 FL | 2,399 | ~$2–6 |
-| 05 GPT-4.1 Mini | 2,399 | ~$7–20 |
-| 06 V4-Pro (no-think) | 480 | ~$1.5–4 |
+| 01 V4-Flash | 1,800 | ~$4 |
+| 02 Qwen3-32B | 1,800 | ~$3 |
+| 03 Llama-4 Scout | 1,800 | ~$3 |
+| 04 Gemini 2.5 FL | 1,800 | ~$5 |
+| 05 GPT-4.1 Mini | 1,800 | ~$12 |
+| 06 V4-Pro (no-think) | 360 | ~$2.5 |
+
+(Estimated from the 2026-08-30 run's per-property token usage; zero-shot
+controls add about $1 in total.)
 
 The printed cost summary at the end of each run reports the **real** token
 usage and cost from the API.
@@ -293,7 +311,12 @@ rate, failure taxonomy).
 
 ---
 
-## 9. Action-parser repair (2026-09-16)
+## 9. Action-parser repair (2026-09-16, pre-PR#9 dataset)
+
+*Historical. This repaired the 2026-08-30 run. The 2026-09-18 re-run on the
+PR #9 dataset used the fixed parser from the start, so every record there has
+`action_parser: 2` and `repair_action_parse.py` is a no-op. The counts below
+refer to the archived results.*
 
 **Bug.** The original action regex only accepted `Action N: Name[arg]`. Models
 often decorate valid actions, for example Gemini `Action 15: [Finish[117]]`,
