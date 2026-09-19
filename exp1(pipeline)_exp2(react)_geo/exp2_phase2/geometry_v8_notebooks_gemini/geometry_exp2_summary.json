@@ -1,0 +1,171 @@
+{
+ "version": 6,
+ "n_corpus": 360,
+ "n_pipelines": 924,
+ "n_steps": 4224,
+ "api_calls_per_model_upper_bound": 33792,
+ "predicted_table4": [
+  {
+   "category": "pass_through",
+   "locality": "all",
+   "band": null,
+   "raw": 0.9499999999999998,
+   "augmented": 0.9499999999999998,
+   "handle": 1.0,
+   "handle_sum": 1.0,
+   "n": 768
+  },
+  {
+   "category": "property_conditioned",
+   "locality": "global",
+   "band": "tight",
+   "raw": 0.5462771317762367,
+   "augmented": 0.9249999999999998,
+   "handle": 0.5,
+   "handle_sum": 0.9249999999999998,
+   "n": 384
+  },
+  {
+   "category": "property_conditioned",
+   "locality": "global",
+   "band": "wide",
+   "raw": 0.7424547464531259,
+   "augmented": 0.9249999999999998,
+   "handle": 0.5,
+   "handle_sum": 0.9249999999999998,
+   "n": 384
+  },
+  {
+   "category": "property_conditioned",
+   "locality": "global",
+   "band": "derived",
+   "raw": 0.115,
+   "augmented": 0.8999999999999999,
+   "handle": 0.0,
+   "handle_sum": 0.8999999999999999,
+   "n": 192
+  },
+  {
+   "category": "property_conditioned",
+   "locality": "global",
+   "band": "boolean",
+   "raw": 0.5,
+   "augmented": 0.9499999999999998,
+   "handle": 0.5,
+   "handle_sum": 0.9499999999999998,
+   "n": 96
+  },
+  {
+   "category": "property_conditioned",
+   "locality": "local",
+   "band": "tight",
+   "raw": 0.8870510987659976,
+   "augmented": 0.9499999999999998,
+   "handle": 0.5,
+   "handle_sum": 0.9499999999999998,
+   "n": 192
+  },
+  {
+   "category": "property_conditioned",
+   "locality": "local",
+   "band": "wide",
+   "raw": 0.9999976715296905,
+   "augmented": 0.9499999999999998,
+   "handle": 0.5,
+   "handle_sum": 0.9499999999999998,
+   "n": 192
+  },
+  {
+   "category": "multi_object",
+   "locality": "global",
+   "band": "tight",
+   "raw": 0.4556717809056529,
+   "augmented": 0.895625,
+   "handle": 0.375,
+   "handle_sum": 0.895625,
+   "n": 768
+  },
+  {
+   "category": "multi_object",
+   "locality": "global",
+   "band": "wide",
+   "raw": 0.6542439588206576,
+   "augmented": 0.895625,
+   "handle": 0.375,
+   "handle_sum": 0.895625,
+   "n": 768
+  },
+  {
+   "category": "multi_object",
+   "locality": "local",
+   "band": "tight",
+   "raw": 0.9173072916666666,
+   "augmented": 0.9000000000000002,
+   "handle": 0.25,
+   "handle_sum": 0.9000000000000002,
+   "n": 192
+  }
+ ],
+ "by_category": {
+  "pass_through": {
+   "pipelines": 168,
+   "steps": 768
+  },
+  "property_conditioned": {
+   "pipelines": 315,
+   "steps": 1440
+  },
+  "multi_object": {
+   "pipelines": 441,
+   "steps": 2016
+  }
+ },
+ "by_gate_band": {
+  "None/None": 168,
+  "area/tight": 63,
+  "area/wide": 63,
+  "perimeter/tight": 63,
+  "perimeter/wide": 63,
+  "aspect_ratio/tight": 63,
+  "aspect_ratio/wide": 63,
+  "edge_length_variance/tight": 63,
+  "edge_length_variance/wide": 63,
+  "convex/boolean": 42,
+  "perimeter/derived": 42,
+  "aspect_ratio/derived": 42,
+  "width/tight": 42,
+  "width/wide": 21,
+  "vertex_count/tight": 42,
+  "vertex_count/wide": 21
+ },
+ "by_tier": {
+  "simple": 308,
+  "medium": 308,
+  "hard": 308
+ },
+ "by_depth": {
+  "1": 132,
+  "2": 132,
+  "3": 132,
+  "4": 132,
+  "5": 132,
+  "7": 132,
+  "10": 132
+ },
+ "operation_usage": {
+  "bounding_box": 85,
+  "intersection": 68,
+  "buffer": 1221,
+  "rotate": 596,
+  "translate": 645,
+  "simplify": 90,
+  "convex_hull": 104,
+  "union": 79,
+  "scale": 1298,
+  "nearest_points": 12,
+  "voronoi": 7,
+  "centroid": 9,
+  "triangulate": 10
+ },
+ "noop_steps": 113
+}

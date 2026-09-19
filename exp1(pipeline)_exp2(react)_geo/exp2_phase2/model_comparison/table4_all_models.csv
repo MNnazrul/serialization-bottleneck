@@ -1,0 +1,73 @@
+model,pipeline_type,condition,accuracy,ci_lo,ci_hi,n_steps
+GPT-4.1-mini,pass-through,raw,1.0000,0.9761,1.0000,157
+GPT-4.1-mini,pass-through,augmented,1.0000,0.9761,1.0000,157
+GPT-4.1-mini,pass-through,handle only,1.0000,0.9761,1.0000,157
+GPT-4.1-mini,pass-through,handle + summary,1.0000,0.9761,1.0000,157
+GPT-4.1-mini,property-conditioned,raw,0.2731,0.2181,0.3361,216
+GPT-4.1-mini,property-conditioned,augmented,0.9306,0.8886,0.9575,216
+GPT-4.1-mini,property-conditioned,handle only,0.2546,0.2012,0.3167,216
+GPT-4.1-mini,property-conditioned,handle + summary,0.9537,0.9169,0.9747,216
+GPT-4.1-mini,multi-object,raw,0.3049,0.2599,0.3541,364
+GPT-4.1-mini,multi-object,augmented,0.8929,0.8569,0.9206,364
+GPT-4.1-mini,multi-object,handle only,0.3104,0.2651,0.3597,364
+GPT-4.1-mini,multi-object,handle + summary,0.8901,0.8538,0.9183,364
+DeepSeek-V4-Flash,pass-through,raw,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Flash,pass-through,augmented,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Flash,pass-through,handle only,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Flash,pass-through,handle + summary,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Flash,property-conditioned,raw,0.5000,0.4339,0.5661,216
+DeepSeek-V4-Flash,property-conditioned,augmented,1.0000,0.9825,1.0000,216
+DeepSeek-V4-Flash,property-conditioned,handle only,0.8426,0.7881,0.8851,216
+DeepSeek-V4-Flash,property-conditioned,handle + summary,1.0000,0.9825,1.0000,216
+DeepSeek-V4-Flash,multi-object,raw,0.4588,0.4083,0.5101,364
+DeepSeek-V4-Flash,multi-object,augmented,0.9918,0.9761,0.9972,364
+DeepSeek-V4-Flash,multi-object,handle only,0.5412,0.4899,0.5917,364
+DeepSeek-V4-Flash,multi-object,handle + summary,0.9890,0.9721,0.9957,364
+DeepSeek-V4-Pro,pass-through,raw,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Pro,pass-through,augmented,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Pro,pass-through,handle only,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Pro,pass-through,handle + summary,1.0000,0.9761,1.0000,157
+DeepSeek-V4-Pro,property-conditioned,raw,0.3565,0.2956,0.4224,216
+DeepSeek-V4-Pro,property-conditioned,augmented,1.0000,0.9825,1.0000,216
+DeepSeek-V4-Pro,property-conditioned,handle only,0.4630,0.3977,0.5295,216
+DeepSeek-V4-Pro,property-conditioned,handle + summary,1.0000,0.9825,1.0000,216
+DeepSeek-V4-Pro,multi-object,raw,0.3819,0.3334,0.4328,364
+DeepSeek-V4-Pro,multi-object,augmented,0.9588,0.9331,0.9749,364
+DeepSeek-V4-Pro,multi-object,handle only,0.4918,0.4408,0.5429,364
+DeepSeek-V4-Pro,multi-object,handle + summary,0.9945,0.9802,0.9985,364
+Gemini-2.5-Flash-Lite,pass-through,raw,0.9936,0.9648,0.9989,157
+Gemini-2.5-Flash-Lite,pass-through,augmented,1.0000,0.9761,1.0000,157
+Gemini-2.5-Flash-Lite,pass-through,handle only,1.0000,0.9761,1.0000,157
+Gemini-2.5-Flash-Lite,pass-through,handle + summary,1.0000,0.9761,1.0000,157
+Gemini-2.5-Flash-Lite,property-conditioned,raw,0.3704,0.3088,0.4365,216
+Gemini-2.5-Flash-Lite,property-conditioned,augmented,0.8750,0.8242,0.9127,216
+Gemini-2.5-Flash-Lite,property-conditioned,handle only,0.2917,0.2351,0.3555,216
+Gemini-2.5-Flash-Lite,property-conditioned,handle + summary,0.8056,0.7476,0.8528,216
+Gemini-2.5-Flash-Lite,multi-object,raw,0.3049,0.2599,0.3541,364
+Gemini-2.5-Flash-Lite,multi-object,augmented,0.8681,0.8295,0.8991,364
+Gemini-2.5-Flash-Lite,multi-object,handle only,0.1978,0.1601,0.2418,364
+Gemini-2.5-Flash-Lite,multi-object,handle + summary,0.8434,0.8025,0.8771,364
+Llama-4-Scout,pass-through,raw,0.9873,0.9547,0.9965,157
+Llama-4-Scout,pass-through,augmented,1.0000,0.9761,1.0000,157
+Llama-4-Scout,pass-through,handle only,1.0000,0.9761,1.0000,157
+Llama-4-Scout,pass-through,handle + summary,1.0000,0.9761,1.0000,157
+Llama-4-Scout,property-conditioned,raw,0.1204,0.0835,0.1705,216
+Llama-4-Scout,property-conditioned,augmented,0.5741,0.5074,0.6382,216
+Llama-4-Scout,property-conditioned,handle only,0.1713,0.1269,0.2272,216
+Llama-4-Scout,property-conditioned,handle + summary,0.6759,0.6109,0.7348,216
+Llama-4-Scout,multi-object,raw,0.0357,0.0210,0.0601,364
+Llama-4-Scout,multi-object,augmented,0.4808,0.4299,0.5320,364
+Llama-4-Scout,multi-object,handle only,0.3599,0.3123,0.4104,364
+Llama-4-Scout,multi-object,handle + summary,0.8819,0.8447,0.9111,364
+Qwen3-32B,pass-through,raw,0.9809,0.9453,0.9935,157
+Qwen3-32B,pass-through,augmented,0.9873,0.9547,0.9965,157
+Qwen3-32B,pass-through,handle only,1.0000,0.9761,1.0000,157
+Qwen3-32B,pass-through,handle + summary,1.0000,0.9761,1.0000,157
+Qwen3-32B,property-conditioned,raw,0.2917,0.2351,0.3555,216
+Qwen3-32B,property-conditioned,augmented,0.9352,0.8942,0.9610,216
+Qwen3-32B,property-conditioned,handle only,0.2222,0.1719,0.2822,216
+Qwen3-32B,property-conditioned,handle + summary,0.9444,0.9054,0.9679,216
+Qwen3-32B,multi-object,raw,0.1923,0.1551,0.2359,364
+Qwen3-32B,multi-object,augmented,0.7665,0.7204,0.8070,364
+Qwen3-32B,multi-object,handle only,0.2885,0.2443,0.3370,364
+Qwen3-32B,multi-object,handle + summary,0.7582,0.7117,0.7994,364

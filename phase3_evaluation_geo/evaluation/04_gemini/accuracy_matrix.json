@@ -1,0 +1,436 @@
+{
+  "model": "Gemini-2.5-Flash-Lite",
+  "folder": "04_gemini",
+  "dataset": "01_dataset",
+  "records": 2700,
+  "complete": true,
+  "n_expected": 2700,
+  "coverage": "full",
+  "parse_failures": 0,
+  "truncated": 25,
+  "max_tokens": {
+    "512": 2700
+  },
+  "accuracy_by_tier_property": {
+    "vertex_count": {
+      "simple": 0.99,
+      "medium": 0.8,
+      "hard": 0.33
+    },
+    "bbox": {
+      "simple": 0.96,
+      "medium": 0.95,
+      "hard": 1.0
+    },
+    "centroid": {
+      "simple": 0.62,
+      "medium": 0.58,
+      "hard": 0.68
+    },
+    "area": {
+      "simple": 0.03,
+      "medium": 0.06,
+      "hard": 0.07
+    },
+    "perimeter": {
+      "simple": 0.08,
+      "medium": 0.07,
+      "hard": 0.04
+    },
+    "convex": {
+      "simple": 0.58,
+      "medium": 0.49,
+      "hard": 0.53
+    },
+    "orientation": {
+      "simple": 0.48,
+      "medium": 0.62,
+      "hard": 0.57
+    },
+    "aspect_ratio": {
+      "simple": 0.05,
+      "medium": 0.04,
+      "hard": 0.04
+    },
+    "edge_length_variance": {
+      "simple": 0.03,
+      "medium": 0.04,
+      "hard": 0.01
+    }
+  },
+  "overall": 0.3977777777777778,
+  "local": 0.8383333333333334,
+  "global": 0.2719047619047619,
+  "local_global_gap": 0.5664285714285715,
+  "centroid_by_offset_band": {
+    "0": 0.7272727272727273,
+    "1": 0.6578947368421053,
+    "2": 0.5833333333333334,
+    "3": 0.375
+  },
+  "by_fill_band": {
+    "area|0": 0.047619047619047616,
+    "area|1": 0.05405405405405406,
+    "area|2": 0.037037037037037035,
+    "area|3": 0.10256410256410256,
+    "perimeter|0": 0.07142857142857142,
+    "perimeter|1": 0.06306306306306306,
+    "perimeter|2": 0.06481481481481481,
+    "perimeter|3": 0.05128205128205128,
+    "aspect_ratio|0": 0.023809523809523808,
+    "aspect_ratio|1": 0.07207207207207207,
+    "aspect_ratio|2": 0.027777777777777776,
+    "aspect_ratio|3": 0.02564102564102564
+  },
+  "by_family": {
+    "concave|simple": 0.4711111111111111,
+    "concave|medium": 0.47555555555555556,
+    "concave|hard": 0.4,
+    "concave|all": 0.4488888888888889,
+    "convex_sharp|simple": 0.37333333333333335,
+    "convex_sharp|medium": 0.29777777777777775,
+    "convex_sharp|hard": 0.28,
+    "convex_sharp|all": 0.31703703703703706,
+    "convex_smooth|simple": 0.4311111111111111,
+    "convex_smooth|medium": 0.36,
+    "convex_smooth|hard": 0.3422222222222222,
+    "convex_smooth|all": 0.37777777777777777,
+    "irregular|simple": 0.4222222222222222,
+    "irregular|medium": 0.4888888888888889,
+    "irregular|hard": 0.4311111111111111,
+    "irregular|all": 0.4474074074074074
+  },
+  "floors_at_5pct": {
+    "vertex_count": {
+      "simple": {
+        "vertex_count_modal": 0.28,
+        "vertex_count_plus_one": 0.0
+      },
+      "medium": {
+        "vertex_count_modal": 0.12,
+        "vertex_count_plus_one": 0.0
+      },
+      "hard": {
+        "vertex_count_modal": 0.05,
+        "vertex_count_plus_one": 0.0
+      }
+    },
+    "bbox": {
+      "simple": {},
+      "medium": {},
+      "hard": {}
+    },
+    "centroid": {
+      "simple": {
+        "centroid_bbox_center": 0.75,
+        "centroid_vertex_mean": 0.62
+      },
+      "medium": {
+        "centroid_bbox_center": 0.73,
+        "centroid_vertex_mean": 0.84
+      },
+      "hard": {
+        "centroid_bbox_center": 0.78,
+        "centroid_vertex_mean": 0.88
+      }
+    },
+    "area": {
+      "simple": {
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.0
+      },
+      "medium": {
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.01
+      },
+      "hard": {
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.05
+      }
+    },
+    "perimeter": {
+      "simple": {
+        "perimeter_bbox_perimeter": 0.0
+      },
+      "medium": {
+        "perimeter_bbox_perimeter": 0.08
+      },
+      "hard": {
+        "perimeter_bbox_perimeter": 0.12
+      }
+    },
+    "convex": {
+      "simple": {
+        "convex_majority": 0.5
+      },
+      "medium": {
+        "convex_majority": 0.5
+      },
+      "hard": {
+        "convex_majority": 0.5
+      }
+    },
+    "orientation": {
+      "simple": {
+        "orientation_majority": 0.5
+      },
+      "medium": {
+        "orientation_majority": 0.5
+      },
+      "hard": {
+        "orientation_majority": 0.5
+      }
+    },
+    "aspect_ratio": {
+      "simple": {
+        "aspect_ratio_const_1.0": 0.03
+      },
+      "medium": {
+        "aspect_ratio_const_1.0": 0.03
+      },
+      "hard": {
+        "aspect_ratio_const_1.0": 0.03
+      }
+    },
+    "edge_length_variance": {
+      "simple": {},
+      "medium": {},
+      "hard": {}
+    }
+  },
+  "centroid_band3_by_tier": {
+    "simple": 0.375,
+    "medium": 0.5,
+    "hard": 0.25
+  },
+  "baseline_subtracted": {
+    "vertex_count": 0.5566666666666666,
+    "bbox": null,
+    "centroid": -0.19666666666666655,
+    "area": 0.03333333333333334,
+    "perimeter": -0.003333333333333327,
+    "convex": 0.033333333333333326,
+    "orientation": 0.05666666666666664,
+    "aspect_ratio": 0.013333333333333336,
+    "edge_length_variance": null
+  },
+  "no_floor_published": [
+    "bbox",
+    "edge_length_variance"
+  ],
+  "not_above_floor": [
+    "centroid/simple",
+    "centroid/medium",
+    "centroid/hard",
+    "area/simple",
+    "area/medium",
+    "area/hard",
+    "perimeter/medium",
+    "perimeter/hard",
+    "convex/simple",
+    "convex/medium",
+    "convex/hard",
+    "orientation/simple",
+    "orientation/medium",
+    "orientation/hard",
+    "aspect_ratio/simple",
+    "aspect_ratio/medium",
+    "aspect_ratio/hard"
+  ],
+  "vertex_count_offby": {
+    "simple": {
+      "n": 100,
+      "exact": 0.99,
+      "off_by_one": 0.01,
+      "within_one": 1.0,
+      "median_abs_err": 0.0
+    },
+    "medium": {
+      "n": 100,
+      "exact": 0.8,
+      "off_by_one": 0.2,
+      "within_one": 1.0,
+      "median_abs_err": 0.0
+    },
+    "hard": {
+      "n": 100,
+      "exact": 0.33,
+      "off_by_one": 0.48,
+      "within_one": 0.81,
+      "median_abs_err": 1.0
+    },
+    "ALL": {
+      "n": 300,
+      "exact": 0.7066666666666667,
+      "off_by_one": 0.23,
+      "within_one": 0.9366666666666666,
+      "median_abs_err": 0.0
+    }
+  },
+  "tolerance_levels": {
+    "area|correct_1pct|simple": 0.0,
+    "area|correct_1pct|medium": 0.02,
+    "area|correct_1pct|hard": 0.03,
+    "area|correct_5pct|simple": 0.03,
+    "area|correct_5pct|medium": 0.06,
+    "area|correct_5pct|hard": 0.07,
+    "area|correct_10pct|simple": 0.1,
+    "area|correct_10pct|medium": 0.09,
+    "area|correct_10pct|hard": 0.09,
+    "area|rel_25pct|simple": 0.14,
+    "area|rel_25pct|medium": 0.26,
+    "area|rel_25pct|hard": 0.3,
+    "aspect_ratio|correct_1pct|simple": 0.02,
+    "aspect_ratio|correct_1pct|medium": 0.02,
+    "aspect_ratio|correct_1pct|hard": 0.0,
+    "aspect_ratio|correct_5pct|simple": 0.05,
+    "aspect_ratio|correct_5pct|medium": 0.04,
+    "aspect_ratio|correct_5pct|hard": 0.04,
+    "aspect_ratio|correct_10pct|simple": 0.1,
+    "aspect_ratio|correct_10pct|medium": 0.08,
+    "aspect_ratio|correct_10pct|hard": 0.07,
+    "aspect_ratio|rel_25pct|simple": 0.2,
+    "aspect_ratio|rel_25pct|medium": 0.16,
+    "aspect_ratio|rel_25pct|hard": 0.21,
+    "bbox|correct_1pct|simple": 0.91,
+    "bbox|correct_1pct|medium": 0.93,
+    "bbox|correct_1pct|hard": 0.95,
+    "bbox|correct_5pct|simple": 0.96,
+    "bbox|correct_5pct|medium": 0.95,
+    "bbox|correct_5pct|hard": 1.0,
+    "bbox|correct_10pct|simple": 0.97,
+    "bbox|correct_10pct|medium": 0.95,
+    "bbox|correct_10pct|hard": 1.0,
+    "bbox|rel_25pct|simple": 0.99,
+    "bbox|rel_25pct|medium": 0.96,
+    "bbox|rel_25pct|hard": 1.0,
+    "centroid|correct_1pct|simple": 0.07,
+    "centroid|correct_1pct|medium": 0.05,
+    "centroid|correct_1pct|hard": 0.05,
+    "centroid|correct_5pct|simple": 0.62,
+    "centroid|correct_5pct|medium": 0.58,
+    "centroid|correct_5pct|hard": 0.68,
+    "centroid|correct_10pct|simple": 0.94,
+    "centroid|correct_10pct|medium": 0.94,
+    "centroid|correct_10pct|hard": 0.98,
+    "centroid|rel_25pct|simple": 1.0,
+    "centroid|rel_25pct|medium": 1.0,
+    "centroid|rel_25pct|hard": 1.0,
+    "edge_length_variance|correct_1pct|simple": 0.0,
+    "edge_length_variance|correct_1pct|medium": 0.02,
+    "edge_length_variance|correct_1pct|hard": 0.0,
+    "edge_length_variance|correct_5pct|simple": 0.03,
+    "edge_length_variance|correct_5pct|medium": 0.04,
+    "edge_length_variance|correct_5pct|hard": 0.01,
+    "edge_length_variance|correct_10pct|simple": 0.06,
+    "edge_length_variance|correct_10pct|medium": 0.05,
+    "edge_length_variance|correct_10pct|hard": 0.04,
+    "edge_length_variance|rel_25pct|simple": 0.21,
+    "edge_length_variance|rel_25pct|medium": 0.14,
+    "edge_length_variance|rel_25pct|hard": 0.09,
+    "perimeter|correct_1pct|simple": 0.0,
+    "perimeter|correct_1pct|medium": 0.03,
+    "perimeter|correct_1pct|hard": 0.01,
+    "perimeter|correct_5pct|simple": 0.08,
+    "perimeter|correct_5pct|medium": 0.07,
+    "perimeter|correct_5pct|hard": 0.04,
+    "perimeter|correct_10pct|simple": 0.16,
+    "perimeter|correct_10pct|medium": 0.08,
+    "perimeter|correct_10pct|hard": 0.07,
+    "perimeter|rel_25pct|simple": 0.33,
+    "perimeter|rel_25pct|medium": 0.26,
+    "perimeter|rel_25pct|hard": 0.17
+  },
+  "relative_error_quantiles": {
+    "area|simple": {
+      "median": 0.8923680465672564,
+      "p90": 2.9727974299153415
+    },
+    "area|medium": {
+      "median": 0.5502209267125651,
+      "p90": 2.2446634246767894
+    },
+    "area|hard": {
+      "median": 0.5410833579018939,
+      "p90": 1.9016607058978492
+    },
+    "aspect_ratio|simple": {
+      "median": 0.5855302122725259,
+      "p90": 2.5742495780518606
+    },
+    "aspect_ratio|medium": {
+      "median": 0.5622511673281014,
+      "p90": 2.4791609787059423
+    },
+    "aspect_ratio|hard": {
+      "median": 0.5815158928322339,
+      "p90": 1.6160535974785852
+    },
+    "bbox|simple": {
+      "median": 0.0,
+      "p90": 0.00013871507119829642
+    },
+    "bbox|medium": {
+      "median": 0.0,
+      "p90": 0.0
+    },
+    "bbox|hard": {
+      "median": 0.0,
+      "p90": 0.0
+    },
+    "centroid|simple": {
+      "median": 0.040629904122311204,
+      "p90": 0.09197994861663789
+    },
+    "centroid|medium": {
+      "median": 0.04448361065758035,
+      "p90": 0.08581203190787023
+    },
+    "centroid|hard": {
+      "median": 0.037403633841322434,
+      "p90": 0.07115451190398006
+    },
+    "edge_length_variance|simple": {
+      "median": 0.7203114918458358,
+      "p90": 7.32029864795004
+    },
+    "edge_length_variance|medium": {
+      "median": 1.4444805733337356,
+      "p90": 10.560119474701796
+    },
+    "edge_length_variance|hard": {
+      "median": 2.9194749482070277,
+      "p90": 16.5413331906113
+    },
+    "perimeter|simple": {
+      "median": 0.3825418818769367,
+      "p90": 0.6556984478962906
+    },
+    "perimeter|medium": {
+      "median": 0.4384450997993911,
+      "p90": 0.7344558176633892
+    },
+    "perimeter|hard": {
+      "median": 0.5367195152751756,
+      "p90": 0.8258372858450251
+    }
+  },
+  "confusion": {
+    "convex": {
+      "tp": 26,
+      "fp": 16,
+      "fn": 124,
+      "tn": 134,
+      "base_rate": 0.5,
+      "precision": 0.6190476190476191,
+      "recall": 0.17333333333333334,
+      "accuracy": 0.5333333333333333
+    },
+    "orientation": {
+      "ccw->cw": 21,
+      "cw->ccw": 112,
+      "ccw->ccw": 129,
+      "cw->cw": 38
+    }
+  }
+}

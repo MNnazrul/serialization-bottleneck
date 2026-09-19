@@ -15,3 +15,15 @@ phase2_react_graph/*/*_results.jsonl
 
 # Experiment 2 raw results from the pre-PR#9 dataset (v1, 2026-08-30 run), kept locally for reference.
 phase2_react_graph/_archive_*/
+
+# Experiment 2 (ReAct) geometry raw Phase-2 payloads — each record stores the full
+# Thought/Action/Observation transcript, so these run 50-66 MB per file and the
+# .json is the .jsonl re-serialised as an array (the same data twice, ~950 MB).
+# Nothing downstream reads them: the comparison figures, summary reports and
+# manifests are committed separately. Same rule already applied to
+# phase2_react_graph/ above. Regenerate by re-running the Phase-2 notebooks.
+exp1(pipeline)_exp2(react)_geo/exp2_phase2/*/results/*/results.json
+exp1(pipeline)_exp2(react)_geo/exp2_phase2/*/results/*/results.jsonl
+
+# Raw per-call LLM request/response transcripts. Write-only debug output.
+llm_io.jsonl

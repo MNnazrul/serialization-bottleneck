@@ -1,0 +1,13 @@
+2026-09-19 22:52:21 INFO    ========================================================
+2026-09-19 22:52:21 INFO    V4-FLASH FULL RUN start (v8 / new_data_v7, integer-coordinate dataset)
+2026-09-19 22:52:21 INFO    provider=deepseek model=deepseek-v4-flash temp=0.0 max_tokens=512 concurrency=5
+2026-09-19 22:52:21 INFO    dataset=/Users/mn/Desktop/serialization-bottleneck/phase1_dataset_geo/geometry_exp1_dataset.json
+2026-09-19 22:52:21 INFO    log file=/Users/mn/Desktop/serialization-bottleneck/phase2_model_results_geo/runners/01_v4flash/logs/v4flash_20260919_225221.log
+2026-09-19 22:52:21 INFO    polygons=300 props=9 | planned new queries=0 | skipping=2700
+2026-09-19 22:52:21 INFO    [dry-run] 0 queries would be sent. No API calls.
+Provider: deepseek  |  Model: deepseek-v4-flash  |  thinking: disabled
+Polygons: 300 x 9 props = 2700 total
+Planned new queries: 0  (skipping 2700 already done)
+Log file: /Users/mn/Desktop/serialization-bottleneck/phase2_model_results_geo/runners/01_v4flash/logs/v4flash_20260919_225221.log
+
+[dry-run] 0 queries would be sent. No API calls.

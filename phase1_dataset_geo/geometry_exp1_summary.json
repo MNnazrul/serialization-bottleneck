@@ -1,0 +1,892 @@
+{
+  "version": 7,
+  "seed": 42,
+  "shapely_version": "2.1.2",
+  "total": 300,
+  "tier_design": "protocol_int",
+  "family_design": "equal_quota_25_per_family_per_tier",
+  "shape_design": "balanced_50_25_25",
+  "tiers": {
+    "simple": {
+      "vertices": [
+        3,
+        8
+      ],
+      "coordinate_range": [
+        0.0,
+        1000.0
+      ],
+      "coordinate_type": "integer"
+    },
+    "medium": {
+      "vertices": [
+        10,
+        20
+      ],
+      "coordinate_range": [
+        0.0,
+        1000.0
+      ],
+      "coordinate_type": "integer"
+    },
+    "hard": {
+      "vertices": [
+        20,
+        40
+      ],
+      "coordinate_range": [
+        0.0,
+        1000.0
+      ],
+      "coordinate_type": "integer"
+    }
+  },
+  "families": [
+    "convex_smooth",
+    "convex_sharp",
+    "concave",
+    "irregular"
+  ],
+  "family_shape_map": {
+    "convex_smooth": "convex",
+    "convex_sharp": "convex",
+    "concave": "concave",
+    "irregular": "irregular"
+  },
+  "joint_band_quota": {
+    "convex": {
+      "0,1": 5,
+      "0,2": 5,
+      "0,3": 4,
+      "1,1": 6,
+      "1,2": 8,
+      "1,3": 4,
+      "2,1": 6,
+      "2,2": 7,
+      "2,3": 3,
+      "3,2": 2
+    },
+    "concave": {
+      "0,1": 2,
+      "0,2": 2,
+      "1,0": 2,
+      "1,1": 4,
+      "1,2": 3,
+      "1,3": 1,
+      "2,0": 2,
+      "2,1": 4,
+      "2,2": 2,
+      "3,0": 3
+    },
+    "irregular": {
+      "0,1": 2,
+      "0,2": 2,
+      "1,0": 2,
+      "1,1": 4,
+      "1,2": 3,
+      "1,3": 1,
+      "2,0": 2,
+      "2,1": 4,
+      "2,2": 2,
+      "3,0": 3
+    }
+  },
+  "family_cell_plan": {
+    "0,1": {
+      "convex_smooth": 2,
+      "convex_sharp": 3
+    },
+    "0,2": {
+      "convex_smooth": 3,
+      "convex_sharp": 2
+    },
+    "0,3": {
+      "convex_smooth": 4,
+      "convex_sharp": 0
+    },
+    "1,1": {
+      "convex_smooth": 2,
+      "convex_sharp": 4
+    },
+    "1,2": {
+      "convex_smooth": 3,
+      "convex_sharp": 5
+    },
+    "1,3": {
+      "convex_smooth": 4,
+      "convex_sharp": 0
+    },
+    "2,1": {
+      "convex_smooth": 1,
+      "convex_sharp": 5
+    },
+    "2,2": {
+      "convex_smooth": 3,
+      "convex_sharp": 4
+    },
+    "2,3": {
+      "convex_smooth": 3,
+      "convex_sharp": 0
+    },
+    "3,2": {
+      "convex_smooth": 0,
+      "convex_sharp": 2
+    }
+  },
+  "min_vertices_for_fill": {
+    "convex_smooth": {
+      "0": 3,
+      "1": 4,
+      "2": 4,
+      "3": 4
+    },
+    "convex_sharp": {
+      "0": 3,
+      "1": 4,
+      "2": 6,
+      "3": 8
+    },
+    "concave": {
+      "0": 4,
+      "1": 5,
+      "2": 5,
+      "3": 5
+    },
+    "irregular": {
+      "0": 4,
+      "1": 5,
+      "2": 5,
+      "3": 5
+    }
+  },
+  "band_edges": {
+    "offset": [
+      [
+        0.0,
+        0.02
+      ],
+      [
+        0.02,
+        0.04
+      ],
+      [
+        0.04,
+        0.07
+      ],
+      [
+        0.07,
+        10.0
+      ]
+    ],
+    "fill": [
+      [
+        0.0,
+        0.52
+      ],
+      [
+        0.52,
+        0.62
+      ],
+      [
+        0.62,
+        0.7
+      ],
+      [
+        0.7,
+        0.76
+      ]
+    ]
+  },
+  "size_ladder": {
+    "extent_range": [
+      0.09,
+      0.84
+    ],
+    "aspect_range": [
+      0.22,
+      4.45
+    ],
+    "rungs_per_tier": 100,
+    "pairing_seed": 20260915,
+    "note": "extent and aspect are dealt as fixed pairs; every tier consumes the identical multiset of pairs, hence the identical multiset of bbox diagonals",
+    "implied_diagonal": {
+      "min": 105.37,
+      "max": 953.13,
+      "mean": 381.51,
+      "median": 325.55,
+      "std": 236.26
+    },
+    "pool_sizes_by_fill_band": {
+      "0": 14,
+      "1": 37,
+      "2": 36,
+      "3": 13
+    }
+  },
+  "counts_by_tier_shape": {
+    "simple": {
+      "concave": 25,
+      "convex": 50,
+      "irregular": 25
+    },
+    "medium": {
+      "concave": 25,
+      "convex": 50,
+      "irregular": 25
+    },
+    "hard": {
+      "concave": 25,
+      "convex": 50,
+      "irregular": 25
+    }
+  },
+  "counts_by_tier_family": {
+    "simple": {
+      "concave": 25,
+      "convex_sharp": 25,
+      "convex_smooth": 25,
+      "irregular": 25
+    },
+    "medium": {
+      "concave": 25,
+      "convex_sharp": 25,
+      "convex_smooth": 25,
+      "irregular": 25
+    },
+    "hard": {
+      "concave": 25,
+      "convex_sharp": 25,
+      "convex_smooth": 25,
+      "irregular": 25
+    }
+  },
+  "convex_overall": 150,
+  "convex_by_tier": {
+    "simple": {
+      "false": 50,
+      "true": 50
+    },
+    "medium": {
+      "false": 50,
+      "true": 50
+    },
+    "hard": {
+      "false": 50,
+      "true": 50
+    }
+  },
+  "orientation_balance": {
+    "simple": {
+      "ccw": 50,
+      "cw": 50
+    },
+    "medium": {
+      "ccw": 50,
+      "cw": 50
+    },
+    "hard": {
+      "ccw": 50,
+      "cw": 50
+    }
+  },
+  "offset_bands_by_tier": {
+    "simple": {
+      "0": 22,
+      "1": 38,
+      "2": 32,
+      "3": 8
+    },
+    "medium": {
+      "0": 22,
+      "1": 38,
+      "2": 32,
+      "3": 8
+    },
+    "hard": {
+      "0": 22,
+      "1": 38,
+      "2": 32,
+      "3": 8
+    }
+  },
+  "fill_bands_by_tier": {
+    "simple": {
+      "0": 14,
+      "1": 37,
+      "2": 36,
+      "3": 13
+    },
+    "medium": {
+      "0": 14,
+      "1": 37,
+      "2": 36,
+      "3": 13
+    },
+    "hard": {
+      "0": 14,
+      "1": 37,
+      "2": 36,
+      "3": 13
+    }
+  },
+  "joint_cells_by_tier": {
+    "simple": {
+      "concave|0,1": 2,
+      "concave|0,2": 2,
+      "concave|1,0": 2,
+      "concave|1,1": 4,
+      "concave|1,2": 3,
+      "concave|1,3": 1,
+      "concave|2,0": 2,
+      "concave|2,1": 4,
+      "concave|2,2": 2,
+      "concave|3,0": 3,
+      "convex|0,1": 5,
+      "convex|0,2": 5,
+      "convex|0,3": 4,
+      "convex|1,1": 6,
+      "convex|1,2": 8,
+      "convex|1,3": 4,
+      "convex|2,1": 6,
+      "convex|2,2": 7,
+      "convex|2,3": 3,
+      "convex|3,2": 2,
+      "irregular|0,1": 2,
+      "irregular|0,2": 2,
+      "irregular|1,0": 2,
+      "irregular|1,1": 4,
+      "irregular|1,2": 3,
+      "irregular|1,3": 1,
+      "irregular|2,0": 2,
+      "irregular|2,1": 4,
+      "irregular|2,2": 2,
+      "irregular|3,0": 3
+    },
+    "medium": {
+      "concave|0,1": 2,
+      "concave|0,2": 2,
+      "concave|1,0": 2,
+      "concave|1,1": 4,
+      "concave|1,2": 3,
+      "concave|1,3": 1,
+      "concave|2,0": 2,
+      "concave|2,1": 4,
+      "concave|2,2": 2,
+      "concave|3,0": 3,
+      "convex|0,1": 5,
+      "convex|0,2": 5,
+      "convex|0,3": 4,
+      "convex|1,1": 6,
+      "convex|1,2": 8,
+      "convex|1,3": 4,
+      "convex|2,1": 6,
+      "convex|2,2": 7,
+      "convex|2,3": 3,
+      "convex|3,2": 2,
+      "irregular|0,1": 2,
+      "irregular|0,2": 2,
+      "irregular|1,0": 2,
+      "irregular|1,1": 4,
+      "irregular|1,2": 3,
+      "irregular|1,3": 1,
+      "irregular|2,0": 2,
+      "irregular|2,1": 4,
+      "irregular|2,2": 2,
+      "irregular|3,0": 3
+    },
+    "hard": {
+      "concave|0,1": 2,
+      "concave|0,2": 2,
+      "concave|1,0": 2,
+      "concave|1,1": 4,
+      "concave|1,2": 3,
+      "concave|1,3": 1,
+      "concave|2,0": 2,
+      "concave|2,1": 4,
+      "concave|2,2": 2,
+      "concave|3,0": 3,
+      "convex|0,1": 5,
+      "convex|0,2": 5,
+      "convex|0,3": 4,
+      "convex|1,1": 6,
+      "convex|1,2": 8,
+      "convex|1,3": 4,
+      "convex|2,1": 6,
+      "convex|2,2": 7,
+      "convex|2,3": 3,
+      "convex|3,2": 2,
+      "irregular|0,1": 2,
+      "irregular|0,2": 2,
+      "irregular|1,0": 2,
+      "irregular|1,1": 4,
+      "irregular|1,2": 3,
+      "irregular|1,3": 1,
+      "irregular|2,0": 2,
+      "irregular|2,1": 4,
+      "irregular|2,2": 2,
+      "irregular|3,0": 3
+    }
+  },
+  "vertex_counts_by_tier": {
+    "simple": {
+      "4": 11,
+      "5": 12,
+      "6": 26,
+      "7": 23,
+      "8": 28
+    },
+    "medium": {
+      "10": 9,
+      "11": 9,
+      "12": 9,
+      "13": 10,
+      "14": 9,
+      "15": 11,
+      "16": 7,
+      "17": 9,
+      "18": 12,
+      "19": 6,
+      "20": 9
+    },
+    "hard": {
+      "20": 5,
+      "21": 5,
+      "22": 5,
+      "23": 5,
+      "24": 4,
+      "25": 5,
+      "26": 5,
+      "27": 5,
+      "28": 4,
+      "29": 5,
+      "30": 5,
+      "31": 5,
+      "32": 4,
+      "33": 5,
+      "34": 5,
+      "35": 5,
+      "36": 4,
+      "37": 5,
+      "38": 5,
+      "39": 5,
+      "40": 4
+    }
+  },
+  "vertex_target_met_by_tier": {
+    "simple": {
+      "met": 63,
+      "walked_down": 37
+    },
+    "medium": {
+      "met": 84,
+      "walked_down": 16
+    },
+    "hard": {
+      "met": 100,
+      "walked_down": 0
+    }
+  },
+  "distribution_by_tier": {
+    "simple": {
+      "vertex_count": {
+        "min": 4,
+        "max": 8,
+        "mean": 6.45,
+        "median": 7.0,
+        "std": 1.31
+      },
+      "area": {
+        "min": 1556.5,
+        "max": 278322.5,
+        "mean": 46670.85,
+        "median": 20227.25,
+        "std": 58602.71
+      },
+      "perimeter": {
+        "min": 224.12,
+        "max": 2033.92,
+        "mean": 826.82,
+        "median": 693.38,
+        "std": 515.91
+      },
+      "bbox_diagonal": {
+        "min": 105.95,
+        "max": 952.61,
+        "mean": 381.53,
+        "median": 325.22,
+        "std": 236.26
+      },
+      "aspect_ratio": {
+        "min": 0.22,
+        "max": 4.44,
+        "mean": 1.42,
+        "median": 0.99,
+        "std": 1.16
+      },
+      "edge_length_variance": {
+        "min": 75.55,
+        "max": 72059.82,
+        "mean": 7397.32,
+        "median": 2503.5,
+        "std": 11750.29
+      },
+      "centroid_offset_norm": {
+        "min": 0.005,
+        "max": 0.1296,
+        "mean": 0.0391,
+        "median": 0.0331,
+        "std": 0.0238
+      },
+      "fill_ratio": {
+        "min": 0.3226,
+        "max": 0.7461,
+        "mean": 0.6038,
+        "median": 0.6166,
+        "std": 0.0879
+      },
+      "vertex_mean_offset_norm": {
+        "min": 0.0019,
+        "max": 0.102,
+        "mean": 0.0425,
+        "median": 0.0385,
+        "std": 0.0252
+      },
+      "wkt_length": {
+        "min": 52.0,
+        "max": 90.0,
+        "mean": 75.51,
+        "median": 78.5,
+        "std": 11.72
+      }
+    },
+    "medium": {
+      "vertex_count": {
+        "min": 10,
+        "max": 20,
+        "mean": 14.93,
+        "median": 15.0,
+        "std": 3.12
+      },
+      "area": {
+        "min": 1673.0,
+        "max": 271429.5,
+        "mean": 46947.26,
+        "median": 20621.25,
+        "std": 58204.45
+      },
+      "perimeter": {
+        "min": 222.86,
+        "max": 2456.51,
+        "mean": 857.68,
+        "median": 687.64,
+        "std": 539.55
+      },
+      "bbox_diagonal": {
+        "min": 105.69,
+        "max": 953.33,
+        "mean": 381.57,
+        "median": 325.52,
+        "std": 236.25
+      },
+      "aspect_ratio": {
+        "min": 0.22,
+        "max": 4.43,
+        "mean": 1.41,
+        "median": 0.99,
+        "std": 1.16
+      },
+      "edge_length_variance": {
+        "min": 33.84,
+        "max": 45619.93,
+        "mean": 3796.13,
+        "median": 970.23,
+        "std": 7178.25
+      },
+      "centroid_offset_norm": {
+        "min": 0.0004,
+        "max": 0.0905,
+        "mean": 0.037,
+        "median": 0.0353,
+        "std": 0.0208
+      },
+      "fill_ratio": {
+        "min": 0.3809,
+        "max": 0.7558,
+        "mean": 0.6118,
+        "median": 0.6197,
+        "std": 0.0809
+      },
+      "vertex_mean_offset_norm": {
+        "min": 0.001,
+        "max": 0.1089,
+        "mean": 0.03,
+        "median": 0.025,
+        "std": 0.0222
+      },
+      "wkt_length": {
+        "min": 106.0,
+        "max": 198.0,
+        "mean": 151.18,
+        "median": 153.0,
+        "std": 28.29
+      }
+    },
+    "hard": {
+      "vertex_count": {
+        "min": 20,
+        "max": 40,
+        "mean": 29.9,
+        "median": 30.0,
+        "std": 6.06
+      },
+      "area": {
+        "min": 1467.0,
+        "max": 269066.5,
+        "mean": 46685.65,
+        "median": 20155.75,
+        "std": 57753.63
+      },
+      "perimeter": {
+        "min": 243.97,
+        "max": 2032.52,
+        "mean": 905.51,
+        "median": 715.15,
+        "std": 529.03
+      },
+      "bbox_diagonal": {
+        "min": 104.75,
+        "max": 953.31,
+        "mean": 381.58,
+        "median": 325.52,
+        "std": 236.27
+      },
+      "aspect_ratio": {
+        "min": 0.22,
+        "max": 4.48,
+        "mean": 1.42,
+        "median": 0.98,
+        "std": 1.17
+      },
+      "edge_length_variance": {
+        "min": 8.8,
+        "max": 22607.86,
+        "mean": 1879.25,
+        "median": 282.94,
+        "std": 3910.35
+      },
+      "centroid_offset_norm": {
+        "min": 0.0061,
+        "max": 0.1347,
+        "mean": 0.0381,
+        "median": 0.034,
+        "std": 0.024
+      },
+      "fill_ratio": {
+        "min": 0.3492,
+        "max": 0.757,
+        "mean": 0.6082,
+        "median": 0.6194,
+        "std": 0.0923
+      },
+      "vertex_mean_offset_norm": {
+        "min": 0.0009,
+        "max": 0.0914,
+        "mean": 0.0254,
+        "median": 0.0204,
+        "std": 0.0189
+      },
+      "wkt_length": {
+        "min": 198.0,
+        "max": 378.0,
+        "mean": 284.94,
+        "median": 284.5,
+        "std": 54.22
+      }
+    }
+  },
+  "generation_attempts": {
+    "total": 7658,
+    "max_for_one_record": 1896,
+    "median": 3.0
+  },
+  "baselines": {
+    "tol_0.01": {
+      "simple": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.28,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.07,
+        "centroid_vertex_mean": 0.04,
+        "aspect_ratio_const_1.0": 0.01,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.0,
+        "perimeter_bbox_perimeter": 0.0
+      },
+      "medium": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.12,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.06,
+        "centroid_vertex_mean": 0.16,
+        "aspect_ratio_const_1.0": 0.01,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.0,
+        "perimeter_bbox_perimeter": 0.0
+      },
+      "hard": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.05,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.09,
+        "centroid_vertex_mean": 0.2,
+        "aspect_ratio_const_1.0": 0.01,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.0,
+        "perimeter_bbox_perimeter": 0.03
+      }
+    },
+    "tol_0.05": {
+      "simple": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.28,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.75,
+        "centroid_vertex_mean": 0.62,
+        "aspect_ratio_const_1.0": 0.03,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.0,
+        "perimeter_bbox_perimeter": 0.0
+      },
+      "medium": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.12,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.73,
+        "centroid_vertex_mean": 0.84,
+        "aspect_ratio_const_1.0": 0.03,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.01,
+        "perimeter_bbox_perimeter": 0.08
+      },
+      "hard": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.05,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.78,
+        "centroid_vertex_mean": 0.88,
+        "aspect_ratio_const_1.0": 0.03,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.05,
+        "perimeter_bbox_perimeter": 0.12
+      }
+    },
+    "tol_0.1": {
+      "simple": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.28,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.96,
+        "centroid_vertex_mean": 0.99,
+        "aspect_ratio_const_1.0": 0.07,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.07,
+        "perimeter_bbox_perimeter": 0.01
+      },
+      "medium": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.12,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 1.0,
+        "centroid_vertex_mean": 0.98,
+        "aspect_ratio_const_1.0": 0.07,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.08,
+        "perimeter_bbox_perimeter": 0.19
+      },
+      "hard": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.05,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 0.96,
+        "centroid_vertex_mean": 1.0,
+        "aspect_ratio_const_1.0": 0.07,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.08,
+        "perimeter_bbox_perimeter": 0.24
+      }
+    },
+    "tol_0.25": {
+      "simple": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.28,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 1.0,
+        "centroid_vertex_mean": 1.0,
+        "aspect_ratio_const_1.0": 0.17,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.42,
+        "perimeter_bbox_perimeter": 0.71
+      },
+      "medium": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.12,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 1.0,
+        "centroid_vertex_mean": 1.0,
+        "aspect_ratio_const_1.0": 0.17,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.47,
+        "perimeter_bbox_perimeter": 0.68
+      },
+      "hard": {
+        "convex_majority": 0.5,
+        "orientation_majority": 0.5,
+        "vertex_count_modal": 0.05,
+        "vertex_count_plus_one": 0.0,
+        "centroid_bbox_center": 1.0,
+        "centroid_vertex_mean": 1.0,
+        "aspect_ratio_const_1.0": 0.17,
+        "area_bbox_area": 0.0,
+        "area_ellipse_in_bbox": 0.46,
+        "perimeter_bbox_perimeter": 0.66
+      }
+    }
+  },
+  "predictions": {
+    "provenance": "copied unchanged from new_data_v6/geometry_exp1_summary.json. NOT re-registered for v7: the v8 model runs had already finished when this block was written. Read prediction-vs-actual as continuity with the v6 expectations, not as a pre-registration test.",
+    "tier_effect_expected": {
+      "vertex_count": "monotone decrease (per-vertex pass; report strict and n/n+1-tolerant)",
+      "bbox": "monotone decrease driven by serialization length (min/max over more numbers)",
+      "perimeter": "monotone decrease (sum of n square roots)",
+      "area": "monotone decrease on the continuous metric; pass rate at 5% low",
+      "edge_length_variance": "monotone decrease; pass rate near floor",
+      "centroid": "at 5% of the diagonal this is a coarse task; report the 1% tolerance and the baseline-subtracted accuracy; no strong tier trend is expected",
+      "aspect_ratio": "weak decrease; depends on bbox recovery only",
+      "convex": "flat at the 50% majority baseline for models that do not run the cross-product test",
+      "orientation": "flat at the 50% majority baseline; no model attempts the signed-area test"
+    },
+    "local_vs_global": "local properties (vertex_count, bbox) above global ones at every tier",
+    "metrics": [
+      "pass rate at 1/5/10/25% relative tolerance",
+      "median absolute relative error",
+      "baseline-subtracted accuracy",
+      "off-by-one rate for vertex_count"
+    ],
+    "v7_specific_note": "v7 changes two things that bear on these expectations. The bbox diagonal is now flat across tiers to 0.01%, so a tier difference in bbox or centroid can no longer come from a wider grading band. And the hard tier's vertex counts are spread across all 21 values instead of piling on 20, so `vertex_count_modal` - the floor a guesser gets - falls with tier rather than rising."
+  },
+  "verification": {
+    "balance_failures": 0,
+    "property_mismatches": 0
+  }
+}

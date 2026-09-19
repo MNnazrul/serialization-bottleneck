@@ -1,0 +1,13 @@
+2026-09-19 22:52:07 INFO    ========================================================
+2026-09-19 22:52:07 INFO    QWEN3 FULL RUN start (v8 / new_data_v7, integer-coordinate dataset)
+2026-09-19 22:52:07 INFO    provider=openrouter model=qwen/qwen3-32b temp=0.0 max_tokens=512 concurrency=5
+2026-09-19 22:52:07 INFO    dataset=/Users/mn/Desktop/serialization-bottleneck/phase1_dataset_geo/geometry_exp1_dataset.json
+2026-09-19 22:52:07 INFO    log file=/Users/mn/Desktop/serialization-bottleneck/phase2_model_results_geo/runners/02_qwen3/logs/qwen3_20260919_225207.log
+2026-09-19 22:52:07 INFO    polygons=300 props=9 | planned new queries=0 | skipping=2700
+2026-09-19 22:52:07 INFO    [dry-run] 0 queries would be sent. No API calls.
+Provider: openrouter  |  Model: qwen/qwen3-32b  |  thinking: disabled
+Polygons: 300 x 9 props = 2700 total
+Planned new queries: 0  (skipping 2700 already done)
+Log file: /Users/mn/Desktop/serialization-bottleneck/phase2_model_results_geo/runners/02_qwen3/logs/qwen3_20260919_225207.log
+
+[dry-run] 0 queries would be sent. No API calls.

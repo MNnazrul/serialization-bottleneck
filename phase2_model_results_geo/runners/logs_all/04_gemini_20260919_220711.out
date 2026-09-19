@@ -1,0 +1,14 @@
+2026-09-19 22:07:21 INFO    ========================================================
+2026-09-19 22:07:21 INFO    GEMINI FULL RUN start (v8 / new_data_v7, integer-coordinate dataset)
+2026-09-19 22:07:21 INFO    provider=google model=gemini-2.5-flash-lite temp=0.0 max_tokens=512 concurrency=5
+2026-09-19 22:07:21 INFO    dataset=/Users/mn/Desktop/serialization-bottleneck/exp1_geo/01_dataset/geometry_exp1_dataset.json
+2026-09-19 22:07:21 INFO    log file=/Users/mn/Desktop/serialization-bottleneck/exp1_geo/02_runners/04_gemini/logs/gemini_20260919_220721.log
+2026-09-19 22:07:21 INFO    subset=none -> 300 polygons
+2026-09-19 22:07:21 INFO    polygons=300 props=9 | planned new queries=0 | skipping=2700
+2026-09-19 22:07:21 INFO    [dry-run] 0 queries would be sent. No API calls.
+Provider: google  |  Model: gemini-2.5-flash-lite  |  thinking: disabled
+Polygons: 300 (subset) x 9 props = 2700 total
+Planned new queries: 0  (skipping 2700 already done)
+Log file: /Users/mn/Desktop/serialization-bottleneck/exp1_geo/02_runners/04_gemini/logs/gemini_20260919_220721.log
+
+[dry-run] 0 queries would be sent. No API calls.

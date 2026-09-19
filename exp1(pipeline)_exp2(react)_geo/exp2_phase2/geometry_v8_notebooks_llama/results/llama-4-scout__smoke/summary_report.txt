@@ -1,0 +1,35 @@
+meta-llama/llama-4-scout - Experiment 2 v2 summary
+Generated (UTC): 2026-09-17T14:42:19.530824+00:00
+
+Raw JSONL rows: 24; latest units retained: 24
+
+condition / mode | units | clean | e2e correct | aborted | backend errors | deferral steps
+------------------------------------------------------------------------------------------------
+raw        / cascading |     3 |     3 |     1 |     0 |     0 |     2
+raw        / oracle    |     3 |     3 |     1 |     0 |     0 |     2
+augmented  / cascading |     3 |     2 |     2 |     1 |     0 |     0
+augmented  / oracle    |     3 |     3 |     2 |     0 |     0 |     0
+handle     / cascading |     3 |     3 |     1 |     0 |     0 |     2
+handle     / oracle    |     3 |     3 |     2 |     0 |     0 |     1
+handle_sum / cascading |     3 |     3 |     3 |     0 |     0 |     0
+handle_sum / oracle    |     3 |     3 |     3 |     0 |     0 |     0
+
+Reasoning check: mean output tokens 88 vs ~57 visible tokens; budget-exhausted steps 0.0%.
+
+ORACLE per-step accuracy (category x condition) and deferral rate  [HEADLINE = global gates; local = control]
+------------------------------------------------------------------------------------------------
+pass_through                    raw=1.000 (def 0.00, fetch 0.00)  augmented=1.000 (def 0.00, fetch 0.00)  handle=1.000 (def 0.00, fetch 0.00)  handle_sum=1.000 (def 0.00, fetch 0.00)
+property_conditioned   [global] raw=0.000 (def 1.00, fetch 0.00)  augmented=1.000 (def 0.00, fetch 0.00)  handle=0.000 (def 1.00, fetch 0.00)  handle_sum=1.000 (def 0.00, fetch 0.00)
+multi_object           [global] raw=0.000 (def 1.00, fetch 0.00)  augmented=0.000 (def 0.00, fetch 0.00)  handle=1.000 (def 0.00, fetch 1.00)  handle_sum=1.000 (def 0.00, fetch 1.00)
+property_conditioned   [local]  raw=n/a  augmented=n/a  handle=n/a  handle_sum=n/a
+multi_object           [local]  raw=n/a  augmented=n/a  handle=n/a  handle_sum=n/a
+
+ORACLE accuracy by MECHANISM x category, with chance floor  (the primary table)
+------------------------------------------------------------------------------------------------
+boolean    property_conditioned   floor=0.50  raw=0.000  augmented=1.000  handle=0.000  handle_sum=1.000
+boolean    multi_object           floor=0.50  raw=0.000  augmented=0.000  handle=1.000  handle_sum=1.000
+
+ORACLE gated decision accuracy by gate x band
+------------------------------------------------------------------------------------------------
+property_conditioned   convex        boolean  raw=0.000  augmented=1.000  handle=0.000  handle_sum=1.000
+multi_object           convex        boolean  raw=0.000  augmented=0.000  handle=1.000  handle_sum=1.000

@@ -1,0 +1,13 @@
+2026-09-19 22:52:10 INFO    ========================================================
+2026-09-19 22:52:10 INFO    LLAMA-4-SCOUT FULL RUN start (v8 / new_data_v7, integer-coordinate dataset)
+2026-09-19 22:52:10 INFO    provider=openrouter model=meta-llama/llama-4-scout temp=0.0 max_tokens=512 concurrency=2
+2026-09-19 22:52:10 INFO    dataset=/Users/mn/Desktop/serialization-bottleneck/phase1_dataset_geo/geometry_exp1_dataset.json
+2026-09-19 22:52:10 INFO    log file=/Users/mn/Desktop/serialization-bottleneck/phase2_model_results_geo/runners/03_llama_scout/logs/llama_scout_20260919_225210.log
+2026-09-19 22:52:10 INFO    polygons=300 props=9 | planned new queries=0 | skipping=2700
+2026-09-19 22:52:10 INFO    [dry-run] 0 queries would be sent. No API calls.
+Provider: openrouter  |  Model: meta-llama/llama-4-scout  |  thinking: disabled
+Polygons: 300 x 9 props = 2700 total
+Planned new queries: 0  (skipping 2700 already done)
+Log file: /Users/mn/Desktop/serialization-bottleneck/phase2_model_results_geo/runners/03_llama_scout/logs/llama_scout_20260919_225210.log
+
+[dry-run] 0 queries would be sent. No API calls.

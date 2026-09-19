@@ -1,0 +1,66 @@
+deepseek-v4-pro - Experiment 2 v2 summary
+Generated (UTC): 2026-09-17T09:43:33.012937+00:00
+
+Raw JSONL rows: 1488; latest units retained: 1488
+
+condition / mode | units | clean | e2e correct | aborted | backend errors | deferral steps
+------------------------------------------------------------------------------------------------
+raw        / cascading |   186 |   168 |    70 |    18 |     0 |    51
+raw        / oracle    |   186 |   186 |    68 |     0 |     0 |   102
+augmented  / cascading |   186 |   186 |   175 |     0 |     0 |     0
+augmented  / oracle    |   186 |   186 |   174 |     0 |     0 |     0
+handle     / cascading |   186 |   177 |    94 |     9 |     0 |    21
+handle     / oracle    |   186 |   186 |    92 |     0 |     0 |    13
+handle_sum / cascading |   186 |   186 |   184 |     0 |     0 |     0
+handle_sum / oracle    |   186 |   186 |   184 |     0 |     0 |     0
+
+Reasoning check: mean output tokens 120 vs ~71 visible tokens; budget-exhausted steps 0.0%.
+
+ORACLE per-step accuracy (category x condition) and deferral rate  [HEADLINE = global gates; local = control]
+------------------------------------------------------------------------------------------------
+pass_through                    raw=1.000 (def 0.00, fetch 0.00)  augmented=1.000 (def 0.00, fetch 0.00)  handle=1.000 (def 0.00, fetch 0.00)  handle_sum=1.000 (def 0.00, fetch 0.00)
+property_conditioned   [global] raw=0.356 (def 0.18, fetch 0.00)  augmented=1.000 (def 0.00, fetch 0.00)  handle=0.463 (def 0.03, fetch 0.94)  handle_sum=1.000 (def 0.00, fetch 0.00)
+multi_object           [global] raw=0.382 (def 0.14, fetch 0.00)  augmented=0.959 (def 0.00, fetch 0.00)  handle=0.492 (def 0.02, fetch 0.47)  handle_sum=0.995 (def 0.00, fetch 0.00)
+property_conditioned   [local]  raw=0.903 (def 0.00, fetch 0.00)  augmented=1.000 (def 0.00, fetch 0.00)  handle=0.903 (def 0.00, fetch 1.00)  handle_sum=1.000 (def 0.00, fetch 0.00)
+multi_object           [local]  raw=0.477 (def 0.27, fetch 0.00)  augmented=0.977 (def 0.00, fetch 0.00)  handle=0.977 (def 0.00, fetch 0.75)  handle_sum=1.000 (def 0.00, fetch 0.00)
+
+ORACLE accuracy by MECHANISM x category, with chance floor  (the primary table)
+------------------------------------------------------------------------------------------------
+threshold  property_conditioned   floor=0.50  raw=0.417  augmented=1.000  handle=0.468  handle_sum=1.000
+threshold  multi_object           floor=0.50  raw=0.379  augmented=1.000  handle=0.548  handle_sum=1.000
+boolean    property_conditioned   floor=0.50  raw=0.375  augmented=1.000  handle=0.417  handle_sum=1.000
+boolean    multi_object           floor=0.50  raw=0.450  augmented=0.950  handle=0.500  handle_sum=1.000
+derived    property_conditioned   floor=0.00  raw=0.083  augmented=1.000  handle=0.472  handle_sum=1.000
+derived    multi_object           floor=0.00  raw=0.100  augmented=0.975  handle=0.575  handle_sum=1.000
+selection  multi_object           floor=0.25  raw=0.439  augmented=0.928  handle=0.433  handle_sum=0.989
+
+ORACLE gated decision accuracy by gate x band
+------------------------------------------------------------------------------------------------
+property_conditioned   area          tight    raw=0.417  augmented=1.000  handle=0.333  handle_sum=1.000
+property_conditioned   area          wide     raw=0.500  augmented=1.000  handle=0.438  handle_sum=1.000
+property_conditioned   aspect_ratio  derived  raw=0.000  augmented=1.000  handle=0.762  handle_sum=1.000
+property_conditioned   aspect_ratio  tight    raw=0.000  augmented=1.000  handle=0.933  handle_sum=1.000
+property_conditioned   aspect_ratio  wide     raw=0.000  augmented=1.000  handle=1.000  handle_sum=1.000
+property_conditioned   convex        boolean  raw=0.375  augmented=1.000  handle=0.417  handle_sum=1.000
+property_conditioned   edge_length_variance tight    raw=0.562  augmented=1.000  handle=0.250  handle_sum=1.000
+property_conditioned   edge_length_variance wide     raw=0.476  augmented=1.000  handle=0.190  handle_sum=1.000
+property_conditioned   perimeter     derived  raw=0.200  augmented=1.000  handle=0.067  handle_sum=1.000
+property_conditioned   perimeter     tight    raw=0.500  augmented=1.000  handle=0.250  handle_sum=1.000
+property_conditioned   perimeter     wide     raw=0.750  augmented=1.000  handle=0.458  handle_sum=1.000
+property_conditioned   vertex_count  tight    raw=0.688  augmented=1.000  handle=0.688  handle_sum=1.000
+property_conditioned   vertex_count  wide     raw=0.905  augmented=1.000  handle=0.905  handle_sum=1.000
+property_conditioned   width         tight    raw=1.000  augmented=1.000  handle=1.000  handle_sum=1.000
+property_conditioned   width         wide     raw=1.000  augmented=1.000  handle=1.000  handle_sum=1.000
+multi_object           area          tight    raw=0.525  augmented=0.975  handle=0.250  handle_sum=0.975
+multi_object           area          wide     raw=0.361  augmented=1.000  handle=0.472  handle_sum=1.000
+multi_object           aspect_ratio  derived  raw=0.000  augmented=0.950  handle=1.000  handle_sum=1.000
+multi_object           aspect_ratio  tight    raw=0.250  augmented=0.950  handle=0.525  handle_sum=1.000
+multi_object           aspect_ratio  wide     raw=0.083  augmented=0.944  handle=0.861  handle_sum=1.000
+multi_object           convex        boolean  raw=0.450  augmented=0.950  handle=0.500  handle_sum=1.000
+multi_object           edge_length_variance tight    raw=0.550  augmented=0.950  handle=0.375  handle_sum=0.975
+multi_object           edge_length_variance wide     raw=0.444  augmented=0.944  handle=0.222  handle_sum=1.000
+multi_object           perimeter     derived  raw=0.200  augmented=1.000  handle=0.150  handle_sum=1.000
+multi_object           perimeter     tight    raw=0.550  augmented=0.900  handle=0.675  handle_sum=1.000
+multi_object           perimeter     wide     raw=0.556  augmented=1.000  handle=0.472  handle_sum=1.000
+multi_object           vertex_count  tight    raw=0.950  augmented=1.000  handle=1.000  handle_sum=1.000
+multi_object           width         tight    raw=0.250  augmented=0.958  handle=0.958  handle_sum=1.000

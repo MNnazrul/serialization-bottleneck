@@ -1,0 +1,285 @@
+==============================================================================
+PHASE 3 EVALUATION - GPT-4.1-mini   (new_data_v7, integer coordinates)
+==============================================================================
+
+RUN INTEGRITY
+------------------------------------------------------------------------------
+  records (latest per pair) : 2700  (expected 2700)
+  distinct polygons         : 300  (expected 300)
+  offset_band 0/1/2/3       : 594 / 1026 / 864 / 216
+  fill_band   0/1/2/3       : 378 / 999 / 972 / 351
+  generators                : {'concave': 675, 'convex_sharp': 675, 'convex_smooth': 675, 'irregular': 675}
+  parse failures            : 0
+  truncated (any parse)     : 0
+  unparsed for any reason   : 0
+  max_tokens used           : {512: 2700}
+
+P1 (PRIMARY)  per-property accuracy by tier
+------------------------------------------------------------------------------
+  Monotone means simple >= medium >= hard. Tier here is vertex count
+  ALONE - the coordinate format is the same in all three, which is the
+  whole point of this dataset. p is a two-sided bootstrap on
+  simple-minus-hard, Holm-corrected across the 9 properties.
+
+    property                   simple   medium     hard    s-h (pp)       p   p_Holm  monotone
+    vertex_count                 99.0     76.0     33.0       +66.0  0.0000   0.0000  yes  *
+    bbox                        100.0    100.0     98.0        +2.0  0.2686   1.0000  yes
+    centroid                     57.0     59.0     70.0       -13.0  0.0598   0.4186  NO
+    area                          9.0     10.0      4.0        +5.0  0.1800   0.9000  NO
+    perimeter                    12.0      7.0      1.0       +11.0  0.0006   0.0048  yes  *
+    convex                       50.0     50.0     50.0        +0.0  1.0000   1.0000  yes
+    orientation                  57.0     52.0     50.0        +7.0  0.3584   1.0000  yes
+    aspect_ratio                  6.0      8.0      7.0        -1.0  0.8892   1.0000  NO
+    edge_length_variance          6.0      3.0      1.0        +5.0  0.0666   0.4186  yes
+
+  monotone in 6/9 properties: vertex_count, bbox, perimeter, convex, orientation, edge_length_variance
+  simple-vs-hard significant after Holm in 2/9: perimeter, vertex_count
+  Monotone-but-not-significant is the common case and means the
+  ordering held while the data cannot rule out chance; it is not the
+  same finding as a significant decline.
+
+P1b  expectations carried over from new_data_v6  (NOT a v7 pre-registration)
+------------------------------------------------------------------------------
+  provenance: copied unchanged from new_data_v6/geometry_exp1_summary.json. NOT re-registered for v7: the v8 model runs had already finished when this block was written. Read prediction-vs-actual as continuity with the v6 expectations, not as a pre-registration test.
+
+    property                   observed  prediction
+    vertex_count               +66.0 pp  monotone decrease (per-vertex pass; report strict and n/n+1-
+    bbox                        +2.0 pp  monotone decrease driven by serialization length (min/max ov
+    centroid                   -13.0 pp  at 5% of the diagonal this is a coarse task; report the 1% t
+    area                        +5.0 pp  monotone decrease on the continuous metric; pass rate at 5% 
+    perimeter                  +11.0 pp  monotone decrease (sum of n square roots)
+    convex                      +0.0 pp  flat at the 50% majority baseline for models that do not run
+    orientation                 +7.0 pp  flat at the 50% majority baseline; no model attempts the sig
+    aspect_ratio                -1.0 pp  weak decrease; depends on bbox recovery only
+    edge_length_variance        +5.0 pp  monotone decrease; pass rate near floor
+
+P2 / P3  local (readable) vs global (computed)
+------------------------------------------------------------------------------
+  The dataset predicts: local properties (vertex_count, bbox) above global ones at every tier
+  PDF 6.3 treats this gap as the primary bottleneck signal; section 9
+  calls a gap under 15 pp 'smaller than expected'.
+
+        tier    local   global  gap (pp)       p   p_Holm
+      simple     99.5     28.1     +71.4  0.0000   0.0000
+      medium     88.0     27.0     +61.0  0.0000   0.0000
+        hard     65.5     26.1     +39.4  0.0000   0.0000
+         ALL     84.3     27.1     +57.2
+
+P4  centroid by offset band  (this dataset's shortcut control)
+------------------------------------------------------------------------------
+  Band = the quartile of the centroid's distance from the bbox centre,
+  in bbox-diagonal units. In band 0 the bbox centre IS the centroid to
+  within 2%, so answering the bbox centre scores. In band 3 it is more
+  than 7% away and the centroid has to be computed. Band 3 is primary.
+  Bands are held at 26/26/25/23 per tier, so a tier difference in
+  centroid accuracy cannot come from the shortcut getting easier.
+
+      band       offset     n      acc             95% CI
+         0    0.00-0.02    66     66.7       [54.5, 77.3]
+         1    0.02-0.04   114     65.8       [57.0, 74.6]
+         2    0.04-0.07    96     58.3       [47.9, 67.7]
+         3       > 0.07    24     45.8       [25.0, 66.7]
+  free ride band 0 - band 3 = +20.8 pp   p = 0.0810
+  A large positive gap means most of the centroid score was the
+  bbox-centre shortcut rather than a computed centroid.
+
+  band 3 only, by tier (the honest centroid number):
+        tier     n      acc             95% CI
+      simple     8     50.0       [12.5, 87.5]
+      medium     8     37.5       [12.5, 75.0]
+        hard     8     50.0       [12.5, 87.5]
+  n is ~8 per tier in band 3, so these three points carry very wide
+  intervals and a swing between them is not by itself an effect.
+
+  the two centroid shortcuts, as published by the dataset:
+        tier  bbox centre  coord mean    model
+      simple         75.0        62.0     57.0
+      medium         73.0        84.0     59.0
+        hard         78.0        88.0     70.0
+  new_data_v7 publishes both; a model has only to find whichever works
+  better, so the bar it must clear is the larger of the two.
+
+  READ THIS. In new_data_v7 the COORD-MEAN shortcut is the larger one,
+  and unlike every other balanced quantity in this dataset it RISES
+  with tier (0.62 / 0.84 / 0.88 at 5%, against 0.35 / 0.29 / 0.37 in
+  new_data_v6). v7's samplers space vertices evenly round the outline,
+  and the mean of an evenly spaced ring converges on the true centroid
+  as the count grows - so this shortcut gets BETTER exactly where the
+  task is meant to get harder. offset_band does not catch it: that
+  balances the OTHER shortcut, distance from the bbox centre.
+  Any hard-tier centroid accuracy below the coord-mean rate is a
+  model underperforming an answer that never read the polygon.
+      simple: model 57.0% vs coord-mean 62.0%  -> BELOW
+      medium: model 59.0% vs coord-mean 84.0%  -> BELOW
+        hard: model 70.0% vs coord-mean 88.0%  -> BELOW
+
+P4b  area and perimeter by fill band  (the v6-run artefact this fixes)
+------------------------------------------------------------------------------
+  fill_band is the quartile of how much of its bounding box the polygon
+  fills (edges 0.52 / 0.62 / 0.70). It is held at 14/37/36/13 in every
+  tier. In the previous run one model answered roughly the bbox area on
+  simple polygons and roughly the inscribed-ellipse area on hard ones,
+  and round many-vertex polygons made the ellipse guess work - which
+  showed up as a tier effect it was not. Reading area across fill bands
+  separates the two.
+
+    property                     band 0     band 1     band 2     band 3   n/band
+    area                           21.4        6.3        5.6        2.6       42
+    perimeter                       9.5        4.5        7.4        7.7       42
+    aspect_ratio                    9.5        4.5        7.4       10.3       42
+  area: fullest band 3 - emptiest band 0 = -18.9 pp   p = 0.0060
+  A large positive gap means the bbox-area or ellipse-area guess is
+  doing the work on the polygons that happen to fill their box.
+
+P5  accuracy against the answer-without-reading floor
+------------------------------------------------------------------------------
+  new_data_v7 publishes, per tier, the rate at which each fixed
+  non-answer scores. Where a property has more than one - the bbox
+  centre and the coordinate mean for centroid, the bbox area and the
+  inscribed ellipse for area - the floor below is the LARGER, because
+  a model only has to find whichever works. Not exceeding it is NO
+  EVIDENCE OF COMPUTATION, which is a different statement from a low
+  score.
+
+  It publishes NO floor for bbox or edge_length_variance. Those are
+  listed below without one rather than against an invented number.
+
+  the published shortcuts, at 5%, by tier:
+    shortcut                       simple   medium     hard
+    area_bbox_area                    0.0      0.0      0.0
+    area_ellipse_in_bbox              0.0      1.0      5.0
+    aspect_ratio_const_1.0            3.0      3.0      3.0
+    centroid_bbox_center             75.0     73.0     78.0
+    centroid_vertex_mean             62.0     84.0     88.0
+    convex_majority                  50.0     50.0     50.0
+    orientation_majority             50.0     50.0     50.0
+    perimeter_bbox_perimeter          0.0      8.0     12.0
+    vertex_count_modal               28.0     12.0      5.0
+    vertex_count_plus_one             0.0      0.0      0.0
+
+    property                    tier     acc   floor   margin       p   p_Holm
+    vertex_count              simple    99.0    28.0    +71.0  0.0000   0.0000
+    vertex_count              medium    76.0    12.0    +64.0  0.0000   0.0000
+    vertex_count                hard    33.0     5.0    +28.0  0.0000   0.0000
+    bbox                      simple   100.0    none      n/a     n/a      n/a
+    bbox                      medium   100.0    none      n/a     n/a      n/a
+    bbox                        hard    98.0    none      n/a     n/a      n/a
+    centroid                  simple    57.0    75.0    -18.0  1.0000   1.0000   <- no evidence
+    centroid                  medium    59.0    84.0    -25.0  1.0000   1.0000   <- no evidence
+    centroid                    hard    70.0    88.0    -18.0  1.0000   1.0000   <- no evidence
+    area                      simple     9.0     0.0     +9.0  0.0001   0.0017
+    area                      medium    10.0     1.0     +9.0  0.0003   0.0048
+    area                        hard     4.0     5.0     -1.0  0.7832   1.0000   <- no evidence
+    perimeter                 simple    12.0     0.0    +12.0  0.0000   0.0000
+    perimeter                 medium     7.0     8.0     -1.0  0.7386   1.0000   <- no evidence
+    perimeter                   hard     1.0    12.0    -11.0  1.0000   1.0000   <- no evidence
+    convex                    simple    50.0    50.0     +0.0  0.5372   1.0000   <- no evidence
+    convex                    medium    50.0    50.0     +0.0  0.5341   1.0000   <- no evidence
+    convex                      hard    50.0    50.0     +0.0  0.5341   1.0000   <- no evidence
+    orientation               simple    57.0    50.0     +7.0  0.0965   1.0000   <- no evidence
+    orientation               medium    52.0    50.0     +2.0  0.3833   1.0000   <- no evidence
+    orientation                 hard    50.0    50.0     +0.0  0.5323   1.0000   <- no evidence
+    aspect_ratio              simple     6.0     3.0     +3.0  0.1377   1.0000   <- no evidence
+    aspect_ratio              medium     8.0     3.0     +5.0  0.0389   0.5835   <- no evidence
+    aspect_ratio                hard     7.0     3.0     +4.0  0.0727   1.0000   <- no evidence
+    edge_length_variance      simple     6.0    none      n/a     n/a      n/a
+    edge_length_variance      medium     3.0    none      n/a     n/a      n/a
+    edge_length_variance        hard     1.0    none      n/a     n/a      n/a
+
+  not shown to exceed the floor in 15/21 (property, tier) cells with a published floor
+  no floor published for: bbox, edge_length_variance
+
+  baseline-subtracted accuracy, pooled over tiers (one of the four metrics the dataset asks for by name):
+    property                     acc   floor  acc - floor
+    vertex_count                69.3    15.0        +54.3
+    bbox                        99.3    none          n/a
+    centroid                    62.0    82.3        -20.3
+    area                         7.7     2.0         +5.7
+    perimeter                    6.7     6.7         +0.0
+    convex                      50.0    50.0         +0.0
+    orientation                 53.0    50.0         +3.0
+    aspect_ratio                 7.0     3.0         +4.0
+    edge_length_variance         3.3    none          n/a
+
+P6  vertex_count: exact vs off-by-one
+------------------------------------------------------------------------------
+  The dataset's metrics block asks for this by name. A model that
+  miscounts by one has parsed the ring and lost the closing-vertex
+  convention; a model that is far off has not counted at all. Those
+  are different failures and one pass rate hides the difference.
+
+        tier     n    exact  off-by-1  within 1  |err| med
+      simple   100     99.0       1.0     100.0        0.0
+      medium   100     76.0      24.0     100.0        0.0
+        hard   100     33.0      43.0      76.0        1.0
+         ALL   300     69.3      22.7      92.0        0.0
+
+PDF 6.3(1)  numeric accuracy at every tolerance level
+------------------------------------------------------------------------------
+  Strict 1% = correct computation, Moderate 5% = approximately correct,
+  Lenient 10% = coarse estimation (Table 13). 25% is the extra level
+  this dataset's metrics block asks for; it has no stored flag and is
+  recomputed from relative_error, so it is n/a where that is missing.
+  The headline numbers above are the 5% column.
+
+    property                      1% sim      1% med      1% har      5% sim      5% med      5% har     10% sim     10% med     10% har     25% sim     25% med     25% har
+    area                             2.0         0.0         0.0         9.0        10.0         4.0        21.0        20.0         8.0        52.0        52.0        23.0
+    aspect_ratio                     2.0         1.0         2.0         6.0         8.0         7.0        10.0        18.0        13.0        26.0        35.0        22.0
+    bbox                            98.0        96.0        87.0       100.0       100.0        98.0       100.0       100.0        99.0       100.0       100.0        99.0
+    centroid                         8.0         5.0         5.0        57.0        59.0        70.0        95.0        94.0        95.0       100.0       100.0       100.0
+    edge_length_variance             2.0         1.0         0.0         6.0         3.0         1.0        11.0         6.0         5.0        20.0        15.0        13.0
+    perimeter                        2.0         1.0         0.0        12.0         7.0         1.0        35.0        11.0         2.0        80.0        38.0        24.0
+
+PDF 6.3(4)  relative error, median and 90th percentile
+------------------------------------------------------------------------------
+  Accuracy is a threshold on this distribution; the quantiles say how
+  wrong the wrong answers are, which a pass rate cannot. The median is
+  the second metric the dataset's block asks for by name.
+
+    property                  simple med  simple p90  medium med  medium p90    hard med    hard p90
+    area                          0.2457      1.2543      0.2367      0.6154      0.3636      0.6718
+    aspect_ratio                  0.4695      1.0179      0.4357      0.8869      0.4773      1.1510
+    bbox                          0.0000      0.0000      0.0000      0.0000      0.0000      0.0174
+    centroid                      0.0383      0.0853      0.0413      0.0779      0.0362      0.0771
+    edge_length_variance          0.7235      4.3808      0.7699      4.6157      0.7171      3.1654
+    perimeter                     0.1456      0.3080      0.3043      0.5396      0.3597      0.9250
+
+PDF 6.2 / 6.3(5)  boolean and categorical properties
+------------------------------------------------------------------------------
+  convex   base rate (fraction True) = 50.0%   accuracy = 50.0%
+                      pred True  pred False
+      true True               4         146
+      true False              4         146
+      precision = 50.0%   recall = 2.7%
+      A model answering one constant scores the base rate. Precision
+      and recall separate 'always False' from a real decision.
+
+  orientation   accuracy = 53.0%
+      true \ pred           ccw         cw
+      ccw                   149          1
+      cw                    140         10
+
+P4c  accuracy by generator family  (25 per tier each, by construction)
+------------------------------------------------------------------------------
+    family               simple     medium       hard    overall
+    concave                52.0       47.1       40.4       46.5
+    convex_sharp           38.7       32.9       26.7       32.7
+    convex_smooth          36.9       36.4       32.9       35.4
+    irregular              48.4       45.8       39.6       44.6
+  A spread ACROSS families at one tier is a shape-difficulty
+  effect, not a serialization effect - the families differ in
+  outline, not in how they are written down. A family that moves
+  differently across tiers than its siblings is the interesting
+  case, and is what an equal quota makes visible.
+
+FIGURES
+------------------------------------------------------------------------------
+  wrote fig1_accuracy_by_property.png
+  wrote fig2_accuracy_vs_tier.png
+  wrote fig3_margin_over_floor.png
+  wrote fig4_centroid_offset_bands.png
+  wrote fig5_accuracy_vs_vertexcount.png
+  wrote fig6_error_distributions.png
+  wrote fig7_accuracy_by_fill_band.png
+  wrote fig8_accuracy_by_family.png
+  wrote fig9_centroid_vs_floors.png

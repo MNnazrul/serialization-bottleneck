@@ -1,0 +1,66 @@
+meta-llama/llama-4-scout - Experiment 2 v2 summary
+Generated (UTC): 2026-09-18T10:19:25.765349+00:00
+
+Raw JSONL rows: 7398; latest units retained: 7392
+
+condition / mode | units | clean | e2e correct | aborted | backend errors | deferral steps
+------------------------------------------------------------------------------------------------
+raw        / cascading |   924 |   594 |   179 |   330 |     0 |  1094
+raw        / oracle    |   924 |   924 |   173 |     0 |     0 |  1662
+augmented  / cascading |   924 |   715 |   436 |   209 |     0 |   225
+augmented  / oracle    |   924 |   924 |   445 |     0 |     0 |   378
+handle     / cascading |   924 |   681 |   225 |   243 |     0 |  1081
+handle     / oracle    |   924 |   924 |   227 |     0 |     0 |  1277
+handle_sum / cascading |   924 |   839 |   696 |    85 |     0 |   125
+handle_sum / oracle    |   924 |   924 |   680 |     0 |     0 |   144
+
+Reasoning check: mean output tokens 132 vs ~83 visible tokens; budget-exhausted steps 0.0%.
+
+ORACLE per-step accuracy (category x condition) and deferral rate  [HEADLINE = global gates; local = control]
+------------------------------------------------------------------------------------------------
+pass_through                    raw=0.970 (def 0.00, fetch 0.00)  augmented=1.000 (def 0.00, fetch 0.00)  handle=0.984 (def 0.00, fetch 0.00)  handle_sum=1.000 (def 0.00, fetch 0.00)
+property_conditioned   [global] raw=0.116 (def 0.47, fetch 0.00)  augmented=0.598 (def 0.16, fetch 0.00)  handle=0.129 (def 0.37, fetch 0.51)  handle_sum=0.678 (def 0.09, fetch 0.08)
+multi_object           [global] raw=0.034 (def 0.48, fetch 0.00)  augmented=0.521 (def 0.09, fetch 0.00)  handle=0.298 (def 0.33, fetch 0.29)  handle_sum=0.856 (def 0.00, fetch 0.16)
+property_conditioned   [local]  raw=0.354 (def 0.50, fetch 0.00)  augmented=0.953 (def 0.04, fetch 0.00)  handle=0.375 (def 0.50, fetch 0.39)  handle_sum=0.974 (def 0.01, fetch 0.06)
+multi_object           [local]  raw=0.302 (def 0.52, fetch 0.00)  augmented=0.630 (def 0.15, fetch 0.00)  handle=0.271 (def 0.50, fetch 0.24)  handle_sum=0.750 (def 0.22, fetch 0.09)
+
+ORACLE accuracy by MECHANISM x category, with chance floor  (the primary table)
+------------------------------------------------------------------------------------------------
+threshold  property_conditioned   floor=0.50  raw=0.122  augmented=0.678  handle=0.169  handle_sum=0.805
+threshold  multi_object           floor=0.50  raw=0.035  augmented=0.599  handle=0.337  handle_sum=0.911
+boolean    property_conditioned   floor=0.50  raw=0.292  augmented=0.948  handle=0.052  handle_sum=0.969
+boolean    multi_object           floor=0.50  raw=0.104  augmented=0.427  handle=0.094  handle_sum=0.927
+derived    property_conditioned   floor=0.00  raw=0.000  augmented=0.099  handle=0.005  handle_sum=0.026
+derived    multi_object           floor=0.00  raw=0.000  augmented=0.068  handle=0.193  handle_sum=0.307
+selection  multi_object           floor=0.25  raw=0.033  augmented=0.569  handle=0.310  handle_sum=0.928
+
+ORACLE gated decision accuracy by gate x band
+------------------------------------------------------------------------------------------------
+property_conditioned   area          tight    raw=0.000  augmented=0.948  handle=0.219  handle_sum=0.938
+property_conditioned   area          wide     raw=0.021  augmented=0.969  handle=0.167  handle_sum=0.927
+property_conditioned   aspect_ratio  derived  raw=0.000  augmented=0.125  handle=0.010  handle_sum=0.000
+property_conditioned   aspect_ratio  tight    raw=0.000  augmented=0.083  handle=0.000  handle_sum=0.583
+property_conditioned   aspect_ratio  wide     raw=0.000  augmented=0.135  handle=0.000  handle_sum=0.333
+property_conditioned   convex        boolean  raw=0.292  augmented=0.958  handle=0.052  handle_sum=0.969
+property_conditioned   edge_length_variance tight    raw=0.094  augmented=0.729  handle=0.073  handle_sum=0.833
+property_conditioned   edge_length_variance wide     raw=0.042  augmented=0.750  handle=0.104  handle_sum=0.844
+property_conditioned   perimeter     derived  raw=0.000  augmented=0.073  handle=0.000  handle_sum=0.052
+property_conditioned   perimeter     tight    raw=0.406  augmented=0.948  handle=0.406  handle_sum=0.979
+property_conditioned   perimeter     wide     raw=0.479  augmented=0.948  handle=0.406  handle_sum=1.000
+property_conditioned   vertex_count  tight    raw=0.646  augmented=0.979  handle=0.646  handle_sum=0.958
+property_conditioned   vertex_count  wide     raw=0.740  augmented=1.000  handle=0.844  handle_sum=0.958
+property_conditioned   width         tight    raw=0.052  augmented=0.927  handle=0.010  handle_sum=0.990
+property_conditioned   width         wide     raw=0.000  augmented=0.917  handle=0.000  handle_sum=0.990
+multi_object           area          tight    raw=0.016  augmented=0.557  handle=0.312  handle_sum=0.828
+multi_object           area          wide     raw=0.010  augmented=0.750  handle=0.406  handle_sum=0.958
+multi_object           aspect_ratio  derived  raw=0.000  augmented=0.115  handle=0.000  handle_sum=0.521
+multi_object           aspect_ratio  tight    raw=0.130  augmented=0.615  handle=0.151  handle_sum=0.958
+multi_object           aspect_ratio  wide     raw=0.167  augmented=0.682  handle=0.052  handle_sum=0.984
+multi_object           convex        boolean  raw=0.125  augmented=0.531  handle=0.094  handle_sum=0.927
+multi_object           edge_length_variance tight    raw=0.099  augmented=0.469  handle=0.521  handle_sum=0.854
+multi_object           edge_length_variance wide     raw=0.208  augmented=0.583  handle=0.443  handle_sum=0.917
+multi_object           perimeter     derived  raw=0.000  augmented=0.073  handle=0.385  handle_sum=0.094
+multi_object           perimeter     tight    raw=0.188  augmented=0.568  handle=0.422  handle_sum=0.891
+multi_object           perimeter     wide     raw=0.208  augmented=0.677  handle=0.448  handle_sum=0.974
+multi_object           vertex_count  tight    raw=0.615  augmented=0.750  handle=0.542  handle_sum=0.948
+multi_object           width         tight    raw=0.271  augmented=0.542  handle=0.135  handle_sum=0.750
