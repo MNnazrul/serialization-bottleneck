@@ -43,6 +43,7 @@ from openai import (
     APITimeoutError,
     AsyncOpenAI,
     InternalServerError,
+    NotFoundError,
     RateLimitError,
 )
 from tenacity import (
@@ -130,6 +131,7 @@ class ModelConfig:
     default_subset: str = "none"   # "none" or a path to a subsample file
     default_max_tokens: int = 512
     model_help: str = ""
+    extra_prompt_suffix: str = ""  # appended after think_suffix; model-specific nudge, not a shared-template change
 
 
 def default_dataset_path(here: Path) -> Path:
@@ -455,7 +457,25 @@ def make_call_model(log: logging.Logger):
             kwargs["reasoning_effort"] = reasoning_effort
         if response_format is not None:
             kwargs["response_format"] = response_format
-        resp = await client.chat.completions.create(**kwargs)
+        try:
+            resp = await client.chat.completions.create(**kwargs)
+        except NotFoundError:
+            # Some OpenRouter-routed models have provider endpoints that don't
+            # declare response_format support at all (the request gets
+            # filtered out of the routing pool entirely, not rejected with a
+            # useful error) -- combined with response_format this produces a
+            # routing-level 404 ("No endpoints found for <model>"), which
+            # looks like the model itself is unavailable but isn't: the same
+            # model/provider works fine without response_format. Retry once
+            # without it; parse_answer()'s regex fallback still extracts the
+            # JSON object from a plain-text completion, so this doesn't
+            # relax what counts as a successfully parsed answer.
+            if response_format is None:
+                raise
+            log.warning("NotFoundError with response_format set for %s -- "
+                        "retrying once without it", model)
+            kwargs.pop("response_format")
+            resp = await client.chat.completions.create(**kwargs)
         latency = time.perf_counter() - start
         content = resp.choices[0].message.content or ""
         finish_reason = resp.choices[0].finish_reason
@@ -653,11 +673,12 @@ async def run(args, config: ModelConfig, log_dir_key: str) -> None:
     write_lock = asyncio.Lock()
 
     extra_body, reasoning_effort, think_suffix = resolve_thinking(config, args)
+    prompt_suffix = think_suffix + config.extra_prompt_suffix
     response_format = None
     if config.supports_json_mode and getattr(args, "json_mode", "off") == "on":
         response_format = {"type": "json_object"}
-    log.info("thinking=%s extra_body=%s reasoning_effort=%s think_suffix=%r json_mode=%s fail_fast=%s",
-             args.thinking, extra_body, reasoning_effort, think_suffix,
+    log.info("thinking=%s extra_body=%s reasoning_effort=%s prompt_suffix=%r json_mode=%s fail_fast=%s",
+             args.thinking, extra_body, reasoning_effort, prompt_suffix,
              getattr(args, "json_mode", None), args.fail_fast)
 
     totals = {"prompt_tokens": 0, "completion_tokens": 0, "parsed_ok": 0, "n": 0}
@@ -673,7 +694,7 @@ async def run(args, config: ModelConfig, log_dir_key: str) -> None:
             h.flush()
 
     async def run_one(row, prop):
-        prompt = build_prompt(row["edge_list"], prop) + think_suffix
+        prompt = build_prompt(row["edge_list"], prop) + prompt_suffix
         raw, usage, latency, finish_reason = await call_model(
             client, args.model, prompt, args.temperature, args.max_tokens,
             extra_body, reasoning_effort, response_format

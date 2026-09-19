@@ -1,0 +1,37 @@
+arm,model,scoring,simple,medium,hard,overall,monotonic
+ReAct,V4-Flash,balanced_bool,65.2,45.2,46.7,52.3,False
+ReAct,V4-Flash,plain,65.2,45.2,46.7,52.3,False
+ReAct,Qwen3-32B,balanced_bool,54.3,42.2,41.3,45.9,True
+ReAct,Qwen3-32B,plain,54.3,42.2,41.3,45.9,True
+ReAct,Llama4-Scout,balanced_bool,57.3,52.7,50.5,53.5,True
+ReAct,Llama4-Scout,plain,57.3,52.7,50.5,53.5,True
+ReAct,Gemini2.5-FL,balanced_bool,53.2,43.0,44.7,46.9,False
+ReAct,Gemini2.5-FL,plain,53.2,43.0,44.7,46.9,False
+ReAct,GPT-4.1-mini,balanced_bool,59.2,46.3,45.7,50.4,True
+ReAct,GPT-4.1-mini,plain,59.2,46.3,45.7,50.4,True
+ReAct,V4-Pro*,balanced_bool,63.3,44.2,45.0,50.8,False
+ReAct,V4-Pro*,plain,63.3,44.2,45.0,50.8,False
+zero-shot (matched),V4-Flash,balanced_bool,69.3,59.5,57.7,62.2,True
+zero-shot (matched),V4-Flash,plain,69.3,59.5,57.7,62.2,True
+zero-shot (matched),Qwen3-32B,balanced_bool,62.7,52.5,51.2,55.4,True
+zero-shot (matched),Qwen3-32B,plain,62.7,52.5,51.2,55.4,True
+zero-shot (matched),Llama4-Scout,balanced_bool,59.5,52.7,50.2,54.1,True
+zero-shot (matched),Llama4-Scout,plain,59.5,52.7,50.2,54.1,True
+zero-shot (matched),Gemini2.5-FL,balanced_bool,62.5,56.8,51.8,57.1,True
+zero-shot (matched),Gemini2.5-FL,plain,62.5,56.8,51.8,57.1,True
+zero-shot (matched),GPT-4.1-mini,balanced_bool,65.3,59.5,52.5,59.1,True
+zero-shot (matched),GPT-4.1-mini,plain,65.3,59.5,52.5,59.1,True
+zero-shot (matched),V4-Pro*,balanced_bool,63.3,61.7,53.3,59.4,True
+zero-shot (matched),V4-Pro*,plain,63.3,61.7,53.3,59.4,True
+zero-shot (Experiment 1),V4-Flash,balanced_bool,69.2,60.2,57.2,62.2,True
+zero-shot (Experiment 1),V4-Flash,plain,69.2,60.2,57.2,62.2,True
+zero-shot (Experiment 1),Qwen3-32B,balanced_bool,62.3,53.5,50.8,55.6,True
+zero-shot (Experiment 1),Qwen3-32B,plain,62.3,53.5,50.8,55.6,True
+zero-shot (Experiment 1),Llama4-Scout,balanced_bool,59.8,52.0,50.8,54.2,True
+zero-shot (Experiment 1),Llama4-Scout,plain,59.8,52.0,50.8,54.2,True
+zero-shot (Experiment 1),Gemini2.5-FL,balanced_bool,62.5,56.8,51.8,57.1,True
+zero-shot (Experiment 1),Gemini2.5-FL,plain,62.5,56.8,51.8,57.1,True
+zero-shot (Experiment 1),GPT-4.1-mini,balanced_bool,65.8,60.2,52.3,59.4,True
+zero-shot (Experiment 1),GPT-4.1-mini,plain,65.8,60.2,52.3,59.4,True
+zero-shot (Experiment 1),V4-Pro*,balanced_bool,62.5,60.0,54.2,58.9,True
+zero-shot (Experiment 1),V4-Pro*,plain,62.5,60.0,54.2,58.9,True

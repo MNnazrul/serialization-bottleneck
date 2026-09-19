@@ -2,186 +2,314 @@
   "total": 300,
   "counts_by_tier_family": {
     "simple": {
+      "random_bipartite": 20,
+      "random_planar": 20,
       "erdos_renyi": 20,
-      "barabasi_albert": 19,
-      "watts_strogatz": 19,
-      "random_bipartite": 22,
-      "random_planar": 20
+      "barabasi_albert": 20,
+      "watts_strogatz": 20
     },
     "medium": {
+      "random_bipartite": 20,
+      "random_planar": 20,
       "erdos_renyi": 20,
-      "barabasi_albert": 19,
-      "watts_strogatz": 19,
-      "random_bipartite": 22,
-      "random_planar": 20
+      "barabasi_albert": 20,
+      "watts_strogatz": 20
     },
     "hard": {
+      "random_bipartite": 20,
+      "random_planar": 20,
       "erdos_renyi": 20,
-      "barabasi_albert": 19,
-      "watts_strogatz": 19,
-      "random_bipartite": 22,
-      "random_planar": 20
+      "barabasi_albert": 20,
+      "watts_strogatz": 20
     }
   },
-  "bipartite_overall": 71,
-  "planar_overall": 93,
+  "bipartite_overall": 150,
+  "planar_overall": 150,
+  "boolean_balance_by_tier": {
+    "simple": {
+      "is_bipartite": {
+        "true": 50,
+        "false": 50
+      },
+      "is_planar": {
+        "true": 50,
+        "false": 50
+      }
+    },
+    "medium": {
+      "is_bipartite": {
+        "true": 50,
+        "false": 50
+      },
+      "is_planar": {
+        "true": 50,
+        "false": 50
+      }
+    },
+    "hard": {
+      "is_bipartite": {
+        "true": 50,
+        "false": 50
+      },
+      "is_planar": {
+        "true": 50,
+        "false": 50
+      }
+    }
+  },
+  "quadrant_by_family_by_tier": {
+    "simple": {
+      "random_bipartite": {
+        "bip_true_plan_true": 10,
+        "bip_true_plan_false": 10,
+        "bip_false_plan_true": 0,
+        "bip_false_plan_false": 0
+      },
+      "random_planar": {
+        "bip_true_plan_true": 0,
+        "bip_true_plan_false": 0,
+        "bip_false_plan_true": 20,
+        "bip_false_plan_false": 0
+      },
+      "erdos_renyi": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 2,
+        "bip_false_plan_false": 8
+      },
+      "barabasi_albert": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 2,
+        "bip_false_plan_false": 8
+      },
+      "watts_strogatz": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 1,
+        "bip_false_plan_false": 9
+      }
+    },
+    "medium": {
+      "random_bipartite": {
+        "bip_true_plan_true": 10,
+        "bip_true_plan_false": 10,
+        "bip_false_plan_true": 0,
+        "bip_false_plan_false": 0
+      },
+      "random_planar": {
+        "bip_true_plan_true": 0,
+        "bip_true_plan_false": 0,
+        "bip_false_plan_true": 20,
+        "bip_false_plan_false": 0
+      },
+      "erdos_renyi": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 2,
+        "bip_false_plan_false": 8
+      },
+      "barabasi_albert": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 2,
+        "bip_false_plan_false": 8
+      },
+      "watts_strogatz": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 1,
+        "bip_false_plan_false": 9
+      }
+    },
+    "hard": {
+      "random_bipartite": {
+        "bip_true_plan_true": 10,
+        "bip_true_plan_false": 10,
+        "bip_false_plan_true": 0,
+        "bip_false_plan_false": 0
+      },
+      "random_planar": {
+        "bip_true_plan_true": 0,
+        "bip_true_plan_false": 0,
+        "bip_false_plan_true": 20,
+        "bip_false_plan_false": 0
+      },
+      "erdos_renyi": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 2,
+        "bip_false_plan_false": 8
+      },
+      "barabasi_albert": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 2,
+        "bip_false_plan_false": 8
+      },
+      "watts_strogatz": {
+        "bip_true_plan_true": 5,
+        "bip_true_plan_false": 5,
+        "bip_false_plan_true": 1,
+        "bip_false_plan_false": 9
+      }
+    }
+  },
   "distribution_by_tier": {
     "simple": {
       "num_nodes": {
         "min": 6,
         "max": 15,
-        "mean": 12.14,
-        "median": 13.0,
-        "std": 2.51
+        "mean": 11.44,
+        "median": 12.0,
+        "std": 2.71
       },
       "num_edges": {
-        "min": 5,
-        "max": 45,
-        "mean": 22.71,
-        "median": 22.0,
-        "std": 9.68
+        "min": 6,
+        "max": 33,
+        "mean": 17.51,
+        "median": 18.0,
+        "std": 6.87
       },
       "triangle_count": {
         "min": 0,
-        "max": 38,
-        "mean": 9.26,
-        "median": 7.5,
-        "std": 9.63
+        "max": 23,
+        "mean": 6.13,
+        "median": 0.0,
+        "std": 7.96
       },
       "diameter": {
         "min": 2,
         "max": 8,
-        "mean": 3.71,
-        "median": 3.0,
-        "std": 1.1
+        "mean": 4.1,
+        "median": 4.0,
+        "std": 1.04
       },
       "chromatic_number": {
         "min": 2,
-        "max": 5,
-        "mean": 3.18,
-        "median": 3.0,
-        "std": 0.84
+        "max": 6,
+        "mean": 3.26,
+        "median": 2.5,
+        "std": 1.49
       },
       "avg_clustering": {
         "min": 0.0,
-        "max": 0.72,
-        "mean": 0.3,
-        "median": 0.37,
-        "std": 0.21
+        "max": 0.64,
+        "mean": 0.18,
+        "median": 0.0,
+        "std": 0.22
       },
       "edge_list_length": {
-        "min": 37,
-        "max": 229,
-        "mean": 119.75,
-        "median": 118.0,
-        "std": 47.07
+        "min": 41,
+        "max": 170,
+        "mean": 95.12,
+        "median": 95.0,
+        "std": 33.61
       }
     },
     "medium": {
       "num_nodes": {
         "min": 16,
         "max": 40,
-        "mean": 28.18,
-        "median": 28.0,
-        "std": 6.83
+        "mean": 29.31,
+        "median": 29.0,
+        "std": 7.14
       },
       "num_edges": {
-        "min": 16,
-        "max": 132,
-        "mean": 69.22,
-        "median": 68.0,
-        "std": 25.78
+        "min": 17,
+        "max": 134,
+        "mean": 52.66,
+        "median": 45.5,
+        "std": 26.55
       },
       "triangle_count": {
         "min": 0,
-        "max": 111,
-        "mean": 22.32,
-        "median": 17.0,
-        "std": 22.45
+        "max": 123,
+        "mean": 15.52,
+        "median": 0.0,
+        "std": 24.36
       },
       "diameter": {
-        "min": 3,
-        "max": 18,
-        "mean": 4.67,
-        "median": 4.0,
-        "std": 2.08
+        "min": 4,
+        "max": 19,
+        "mean": 6.72,
+        "median": 6.0,
+        "std": 2.74
       },
       "chromatic_number": {
         "min": 2,
-        "max": 5,
-        "mean": 3.42,
-        "median": 4.0,
-        "std": 0.95
+        "max": 6,
+        "mean": 3.26,
+        "median": 2.5,
+        "std": 1.49
       },
       "avg_clustering": {
         "min": 0.0,
-        "max": 0.49,
-        "mean": 0.22,
-        "median": 0.23,
-        "std": 0.16
+        "max": 0.72,
+        "mean": 0.15,
+        "median": 0.0,
+        "std": 0.19
       },
       "edge_list_length": {
-        "min": 98,
-        "max": 755,
-        "mean": 385.44,
-        "median": 378.0,
-        "std": 146.74
+        "min": 99,
+        "max": 751,
+        "mean": 299.86,
+        "median": 266.5,
+        "std": 147.48
       }
     },
     "hard": {
       "num_nodes": {
         "min": 41,
-        "max": 79,
+        "max": 80,
         "mean": 61.26,
-        "median": 61.0,
-        "std": 11.31
+        "median": 63.0,
+        "std": 11.68
       },
       "num_edges": {
-        "min": 59,
-        "max": 499,
-        "mean": 176.96,
-        "median": 154.0,
-        "std": 82.7
+        "min": 41,
+        "max": 521,
+        "mean": 128.27,
+        "median": 88.5,
+        "std": 93.5
       },
       "triangle_count": {
         "min": 0,
-        "max": 177,
-        "mean": 39.29,
-        "median": 27.0,
-        "std": 41.36
+        "max": 266,
+        "mean": 33.16,
+        "median": 0.0,
+        "std": 56.41
       },
       "diameter": {
         "min": 4,
-        "max": 20,
-        "mean": 5.91,
-        "median": 5.0,
-        "std": 2.45
+        "max": 31,
+        "mean": 9.75,
+        "median": 8.0,
+        "std": 5.93
       },
       "chromatic_number": {
         "min": 2,
-        "max": 5,
-        "mean": 3.39,
-        "median": 4.0,
-        "std": 0.9
+        "max": 6,
+        "mean": 3.26,
+        "median": 2.5,
+        "std": 1.49
       },
       "avg_clustering": {
         "min": 0.0,
-        "max": 0.46,
-        "mean": 0.17,
-        "median": 0.15,
-        "std": 0.14
+        "max": 0.58,
+        "mean": 0.13,
+        "median": 0.0,
+        "std": 0.19
       },
       "edge_list_length": {
-        "min": 338,
-        "max": 2870,
-        "mean": 1025.22,
-        "median": 896.5,
-        "std": 477.05
+        "min": 242,
+        "max": 3002,
+        "mean": 747.38,
+        "median": 525.5,
+        "std": 536.6
       }
     }
   },
-  "chromatic_number_uncertified_count": 1,
-  "chromatic_number_uncertified_ids": [
-    "graph_hard_watts_strogatz_008"
-  ]
+  "chromatic_number_uncertified_count": 0,
+  "chromatic_number_uncertified_ids": []
 }

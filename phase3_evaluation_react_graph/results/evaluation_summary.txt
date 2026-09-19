@@ -1,0 +1,142 @@
+EXPERIMENT 2 (ReAct) - GRAPH DOMAIN - EVALUATION SUMMARY
+============================================================
+Task: recover graph properties from text-serialized (edge-list) graphs with a
+      ReAct Thought/Action/Observation loop over structural tools
+      (Neighbors / Degree / HasEdge / Nodes / EdgeCount / Finish),
+      vs a matched single-call zero-shot baseline (Experiment 1's method).
+Grading: identical to Experiment 1 (exact match; all evaluated properties are
+         int/bool). Evaluated: the same 6 properties as Experiment 1's Phase 3
+         (triangle_count / avg_clustering dropped). ReAct episodes that never
+         reach Finish are scored incorrect (no CoT-SC back-off).
+
+  V4-Flash      1800/1800 episodes             zero-shot baseline: matched (same session)
+  Qwen3-32B     1800/1800 episodes             zero-shot baseline: matched (same session)
+  Llama4-Scout  1800/1800 episodes             zero-shot baseline: matched (same session)
+  Gemini2.5-FL  1800/1800 episodes             zero-shot baseline: matched (same session)
+  GPT-4.1-mini  1800/1800 episodes             zero-shot baseline: matched (same session)
+  V4-Pro*       360/360 episodes               zero-shot baseline: matched (same session)
+
+HEADLINE: ReAct helps LOCAL properties, hurts GLOBAL ones.
+  V4-Flash      local   +0.3pp [+0.0,+0.8]    global -14.9pp [-18.7,-11.1]
+  Qwen3-32B     local   +2.8pp [+1.2,+4.7]    global -15.7pp [-19.2,-12.2]
+  Llama4-Scout  local   +4.7pp [+3.0,+6.3]    global  -3.3pp [-7.0,+0.5]
+  Gemini2.5-FL  local   +4.3pp [+2.8,+6.0]    global -17.3pp [-20.8,-13.7]
+  GPT-4.1-mini  local   +2.2pp [+1.2,+3.5]    global -14.2pp [-17.8,-10.5]
+  V4-Pro*       local   +1.7pp [+0.0,+4.2]    global -13.8pp [-22.1,-5.4]
+
+PER-PROPERTY (ReAct acc  ->  zero-shot acc   [ReAct finish rate])
+  V4-Flash  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  99.3%   fin 100%   d  +0.7pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        57.7% ->  55.7%   fin  59%   d  +2.0pp
+    [G] is_planar           35.0% ->  59.0%   fin  35%   d -24.0pp
+    [G] diameter            13.0% ->  37.0%   fin  13%   d -24.0pp
+    [G] chromatic_number     8.3% ->  22.0%   fin   8%   d -13.7pp
+
+  Qwen3-32B  (matched (same session))
+    [L] degree_of_node_0    98.0% ->  92.3%   fin 100%   d  +5.7pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        32.0% ->  50.0%   fin  46%   d -18.0pp
+    [G] is_planar           33.3% ->  56.3%   fin  45%   d -23.0pp
+    [G] diameter             5.3% ->  16.0%   fin   9%   d -10.7pp
+    [G] chromatic_number     7.0% ->  18.0%   fin  14%   d -11.0pp
+
+  Llama4-Scout  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  90.7%   fin 100%   d  +9.3pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        35.0% ->  49.3%   fin  71%   d -14.3pp
+    [G] is_planar           52.7% ->  52.0%   fin  82%   d  +0.7pp
+    [G] diameter            15.7% ->  20.0%   fin  62%   d  -4.3pp
+    [G] chromatic_number    17.7% ->  12.7%   fin  81%   d  +5.0pp
+
+  Gemini2.5-FL  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  91.7%   fin 100%   d  +8.3pp
+    [L] edge_count         100.0% ->  99.7%   fin 100%   d  +0.3pp
+    [G] is_bipartite        54.3% ->  55.0%   fin  61%   d  -0.7pp
+    [G] is_planar           17.3% ->  51.0%   fin  20%   d -33.7pp
+    [G] diameter             3.0% ->  28.7%   fin   3%   d -25.7pp
+    [G] chromatic_number     7.0% ->  16.3%   fin   8%   d  -9.3pp
+
+  GPT-4.1-mini  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  95.7%   fin 100%   d  +4.3pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        51.3% ->  54.3%   fin  56%   d  -3.0pp
+    [G] is_planar           41.3% ->  61.3%   fin  53%   d -20.0pp
+    [G] diameter             4.7% ->  30.0%   fin   6%   d -25.3pp
+    [G] chromatic_number     5.0% ->  13.3%   fin  14%   d  -8.3pp
+
+  V4-Pro*  (matched (same session))
+    [L] degree_of_node_0   100.0% ->  96.7%   fin 100%   d  +3.3pp
+    [L] edge_count         100.0% -> 100.0%   fin 100%   d  +0.0pp
+    [G] is_bipartite        51.7% ->  60.0%   fin  53%   d  -8.3pp
+    [G] is_planar           33.3% ->  60.0%   fin  35%   d -26.7pp
+    [G] diameter            11.7% ->  23.3%   fin  15%   d -11.7pp
+    [G] chromatic_number     8.3% ->  16.7%   fin  10%   d  -8.3pp
+
+PER-TIER ACCURACY  (class-balanced is_bipartite / is_planar; see per_tier_accuracy.csv)
+  Positives per tier (simple/medium/hard):
+    full 300   is_bipartite 50 of 100/50 of 100/50 of 100   is_planar 50 of 100/50 of 100/50 of 100
+    V4-Pro* 60 is_bipartite 10 of 20/10 of 20/10 of 20   is_planar 10 of 20/10 of 20/10 of 20
+  ReAct
+    model          simple medium   hard  overall   plain-acc simple/medium/hard
+    Llama4-Scout    57.3%  52.7%  50.5%    53.5%   57.3/52.7/50.5
+    V4-Flash        65.2%  45.2%  46.7%    52.3%   65.2/45.2/46.7
+      ^ not monotonic: hard - medium = +1.5pp, 95% CI [-0.6,+3.6] (within noise)
+    V4-Pro*         63.3%  44.2%  45.0%    50.8%   63.3/44.2/45.0
+      ^ not monotonic: hard - medium = +0.8pp, 95% CI [-3.8,+5.2] (within noise)
+    GPT-4.1-mini    59.2%  46.3%  45.7%    50.4%   59.2/46.3/45.7
+    Gemini2.5-FL    53.2%  43.0%  44.7%    46.9%   53.2/43.0/44.7
+      ^ not monotonic: hard - medium = +1.7pp, 95% CI [-0.6,+3.8] (within noise)
+    Qwen3-32B       54.3%  42.2%  41.3%    45.9%   54.3/42.2/41.3
+  zero-shot (matched)
+    model          simple medium   hard  overall   plain-acc simple/medium/hard
+    V4-Flash        69.3%  59.5%  57.7%    62.2%   69.3/59.5/57.7
+    V4-Pro*         63.3%  61.7%  53.3%    59.4%   63.3/61.7/53.3
+    GPT-4.1-mini    65.3%  59.5%  52.5%    59.1%   65.3/59.5/52.5
+    Gemini2.5-FL    62.5%  56.8%  51.8%    57.1%   62.5/56.8/51.8
+    Qwen3-32B       62.7%  52.5%  51.2%    55.4%   62.7/52.5/51.2
+    Llama4-Scout    59.5%  52.7%  50.2%    54.1%   59.5/52.7/50.2
+  zero-shot (Experiment 1)
+    model          simple medium   hard  overall   plain-acc simple/medium/hard
+    V4-Flash        69.2%  60.2%  57.2%    62.2%   69.2/60.2/57.2
+    GPT-4.1-mini    65.8%  60.2%  52.3%    59.4%   65.8/60.2/52.3
+    V4-Pro*         62.5%  60.0%  54.2%    58.9%   62.5/60.0/54.2
+    Gemini2.5-FL    62.5%  56.8%  51.8%    57.1%   62.5/56.8/51.8
+    Qwen3-32B       62.3%  53.5%  50.8%    55.6%   62.3/53.5/50.8
+    Llama4-Scout    59.8%  52.0%  50.8%    54.2%   59.8/52.0/50.8
+  V4-Pro* is scored on its own 60-graph subsample; compare it to the full-300
+  models with that caveat.
+  is_planar decidable from the header alone (m > 3n-6, so provably non-planar):
+    simple/medium/hard = 0/8/19 of 100 graphs. ReAct models use
+    this shortcut (Nodes[] -> EdgeCount[] -> Finish[false]), which raises
+    hard-tier is_planar above medium; see the per-property rows above.
+
+MECHANISM
+  - Local properties (degree_of_node_0, edge_count) are one tool call away:
+    ReAct issues Degree[0] / EdgeCount[] and finishes in ~2 steps, removing
+    the zero-shot miscount.
+  - Global properties need an aggregate over the whole structure. The model
+    spends its step budget on one-at-a-time HasEdge / Neighbors probes and
+    often never reaches Finish (see finish rates above); zero-shot at least
+    guesses from the full edge list in context. This is the paper's own
+    trade-off (Table 2: the structural constraint raises reasoning-error rate).
+  - The action parser accepts decorated but valid actions (`Action 3: [Finish[4]]`,
+    `**Action 3:** ...`, backticks). The pre-PR#9 run's strict parser rejected
+    them, which caused a spurious Gemini edge_count drop; this run used the
+    fixed parser from the start (records carry action_parser=2).
+
+REACT LOOP BEHAVIOUR (per model)
+  V4-Flash      finish   53%   mean steps  9.2   mean steps|correct  3.9   no_finish   47%
+  Qwen3-32B     finish   52%   mean steps  9.1   mean steps|correct  3.2   no_finish   48%
+  Llama4-Scout  finish   83%   mean steps  8.6   mean steps|correct  5.1   no_finish   17%
+  Gemini2.5-FL  finish   48%   mean steps  9.4   mean steps|correct  3.4   no_finish   52%
+  GPT-4.1-mini  finish   55%   mean steps  9.5   mean steps|correct  4.2   no_finish   45%
+  V4-Pro*       finish   52%   mean steps  9.4   mean steps|correct  4.1   no_finish   48%
+
+V4-Flash REACT FAILURE MODES (heuristic, n=858, manual review pending)
+  no_finish_global      854  (100%)
+  wrong_finish            4  (0%)
+
+NOTE
+  All six models have full ReAct coverage and a matched, same-session
+  zero-shot control. V4-Pro* is the 60-graph 20% subsample, as in Experiment 1.

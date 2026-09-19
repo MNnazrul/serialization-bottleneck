@@ -14,6 +14,20 @@ Per Experiment 1 protocol (serialization_experiment_1.pdf):
     overflowing the 512-token cap with no parseable answer.
   - temperature 0, max_tokens 512, no system prompt, zero-shot
 
+2026-09-16: OpenRouter currently has no response_format-capable endpoint for
+this model that doesn't require BYOK (bring-your-own-key) -- combined with
+response_format=on, every request was routed to 0 endpoints and failed with
+a 404 "No endpoints found", which looked like a full model outage but wasn't
+(the same model/provider works fine without response_format). The harness's
+call_model() now catches that specific NotFoundError and retries once
+without response_format (graph_harness.py) -- but that path alone hits
+exactly the narration/truncation failure this file's docstring already
+warned about above, so extra_prompt_suffix below adds a blunt anti-narration
+instruction that keeps the fallback path's answers short enough to finish
+inside the 512-token cap (verified: 512-token truncation -> 14-token clean
+JSON answer on the same prompt). Applied only to this model's prompts, not
+the shared TEMPLATE the other five models already used to collect their data.
+
 Key required: OPENROUTER_API_KEY.
 
 All output stays inside this folder:
@@ -50,6 +64,8 @@ CONFIG = ModelConfig(
     default_json_mode="on",
     default_subset="none",
     model_help="Llama 4 Scout via OpenRouter (PDF Table 1).",
+    extra_prompt_suffix=("\n\nDo not show any reasoning, steps, or explanation. "
+                          "Output ONLY the JSON object on a single line, nothing else."),
 )
 
 if __name__ == "__main__":

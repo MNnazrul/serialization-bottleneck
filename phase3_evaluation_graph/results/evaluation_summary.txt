@@ -2,26 +2,26 @@ EXPERIMENT 1 - GRAPH DOMAIN - PHASE 3 EVALUATION SUMMARY
 ============================================================
 Task: recover 8 properties from text-serialized (edge-list) graphs.
 Models: V4-Flash, Qwen3-32B, Llama4-Scout, Gemini2.5-FL, GPT-4.1-mini, V4-Pro*
-Coverage: V4-Flash 300 graphs / 2399 queries; Qwen3-32B 300 graphs / 2399 queries; Llama4-Scout 300 graphs / 2399 queries; Gemini2.5-FL 300 graphs / 2399 queries; GPT-4.1-mini 300 graphs / 2399 queries; V4-Pro* 60 graphs / 480 queries
+Coverage: V4-Flash 300 graphs / 1800 queries; Qwen3-32B 300 graphs / 1800 queries; Llama4-Scout 300 graphs / 1800 queries; Gemini2.5-FL 300 graphs / 1800 queries; GPT-4.1-mini 300 graphs / 1800 queries; V4-Pro* 60 graphs / 360 queries
 
 HEADLINE: local-vs-global accuracy gap, all capped models.
-  Gemini2.5-FL  gap +63.0pp  [+60.1,+65.8]  p=0.0000
-  Qwen3-32B     gap +60.5pp  [+57.9,+63.2]  p=0.0000
-  GPT-4.1-mini  gap +60.3pp  [+57.6,+62.9]  p=0.0000
-  V4-Flash      gap +57.7pp  [+54.9,+60.7]  p=0.0000
-  Llama4-Scout  gap +57.5pp  [+54.4,+60.7]  p=0.0000
+  Llama4-Scout  gap +62.2pp  [+59.0,+65.3]  p=0.0000
+  Qwen3-32B     gap +60.2pp  [+57.0,+63.3]  p=0.0000
+  Gemini2.5-FL  gap +57.9pp  [+54.7,+61.1]  p=0.0000
+  GPT-4.1-mini  gap +57.6pp  [+54.6,+60.7]  p=0.0000
+  V4-Flash      gap +56.0pp  [+53.1,+58.9]  p=0.0000
 
 MECHANISM: compute failure, not read failure (expected pattern, per-model detail above).
-  - degree_of_node_0 / edge_count (readable) vs. triangle_count / diameter /
-    chromatic_number / avg_clustering (must compute over the whole structure).
+  - degree_of_node_0 / edge_count (readable) vs. diameter / chromatic_number
+    (must compute over the whole structure; triangle_count/avg_clustering dropped, see Cell 1).
   - is_bipartite / is_planar: compare acc vs. base-rate baseline in Cell 7's tables.
-  - cross-model Spearman rho = 0.95 among capped models: one shared difficulty ordering.
+  - cross-model Spearman rho = 0.98 among capped models: one shared difficulty ordering.
 
-PIVOTAL: V4-Pro* (free reasoning) gap +60.0pp, globals 39.2%.
+PIVOTAL: V4-Pro* (free reasoning) gap +59.2pp, globals 39.2%.
   => compare against geometry's equivalent line to see if the same
      single-pass / no-chain-of-thought story holds cross-domain.
 
-V4-Flash FAILURE MODES (heuristic, n=1182): arithmetic_error 50%, structural_reasoning_error 25%, off_by_one_definition 12%, hallucination 8% (manual review pending).
+V4-Flash FAILURE MODES (heuristic, n=681): arithmetic_error 38%, structural_reasoning_error 37%, off_by_one_definition 15%, hallucination 5% (manual review pending).
 
 DECISION (section 9): graphs support OUTCOME A (proceed as planned).
   - global-failure criterion met by 5/5 capped models.
